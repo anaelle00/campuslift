@@ -18,8 +18,9 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -31,4 +32,5 @@
     "**/*.mts"
   ],
   "exclude": ["node_modules"]
+  
 }
