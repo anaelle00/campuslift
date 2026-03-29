@@ -37,6 +37,7 @@ Before creating a staging deployment:
 
 - the repository is pushed to GitHub
 - `npm run lint` passes
+- `npm run test` passes
 - `npm run typecheck` passes
 - the latest SQL files are committed
 - `.env.example` is up to date
@@ -73,6 +74,18 @@ After the app is deployed on a real URL, also update the external services:
 - create or update the webhook endpoint for the deployed environment
 - use the deployed webhook secret, not the local CLI secret
 - keep test mode enabled for staging
+
+## Current Rate Limiting Note
+
+CampusLift currently uses an in-memory rate limiter on write-heavy API routes.
+
+This is acceptable for:
+
+- local development
+- single-instance previews
+- portfolio staging
+
+If the app moves to real multi-instance production deployment, replace it with a shared store-backed limiter so limits stay consistent across instances.
 
 ## Staging Smoke Test
 

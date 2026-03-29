@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import { createComment } from "@/features/comments/actions";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
 export async function POST(request: Request, context: RouteContext) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "comments:create",
+    max: 20,
+    windowMs: 5 * 60 * 1000,
+    message: "Too many comments in a short time. Please slow down and try again.",
+  });
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const { id } = await context.params;
 
   let body: unknown = null;

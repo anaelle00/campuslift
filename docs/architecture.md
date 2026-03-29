@@ -1,68 +1,20 @@
 # CampusLift Architecture
 
-Date: 2026-03-26
+Date: 2026-03-29
 
 ## Current State
 
-CampusLift currently uses a straightforward Next.js App Router structure:
+CampusLift now uses a feature-oriented Next.js App Router structure with server-first mutations and versioned database changes.
 
 ```text
 src/
-  app/
-  components/
-  lib/
-  types/
-```
-
-This is enough for an MVP, but it becomes harder to maintain as business rules grow. The current pain points are:
-
-- route files performing direct data fetching
-- client components handling sensitive mutations
-- business logic mixed with UI code
-- no clear feature boundary for auth, projects, profiles, donations, or comments
-
-## Target State
-
-The next structural step is a feature-oriented layout:
-
-```text
-src/
-  app/
-    (marketing)/
-    (app)/
-    api/
-  features/
-    auth/
-      actions.ts
-      queries.ts
-      schemas.ts
-      components/
-    projects/
-      actions.ts
-      queries.ts
-      schemas.ts
-      components/
-    profiles/
-      actions.ts
-      queries.ts
-      schemas.ts
-      components/
-    donations/
-      actions.ts
-      queries.ts
-      schemas.ts
-    comments/
-      actions.ts
-      queries.ts
-      schemas.ts
-  lib/
-    supabase/
-      client.ts
-      server.ts
-      admin.ts
-    env.ts
-    utils.ts
-  types/
+  app/          routes, layouts, route handlers, loading and error boundaries
+  components/   reusable UI and route-level presentation
+  features/     feature-owned actions, queries, schemas, and business logic
+  lib/          Supabase and Stripe infrastructure helpers
+  types/        shared application and database types
+docs/           architecture, database, deployment, testing, roadmap
+supabase/       migrations and local seed
 ```
 
 ## Architectural Rules
@@ -73,57 +25,121 @@ Files inside `src/app` should mostly:
 
 - read params
 - call feature queries or actions
-- compose UI
+- compose page-level UI
+
+Business rules should stay in `src/features/*`.
 
 ### 2. Server-first mutations
 
-Sensitive writes should move away from direct browser-side database updates.
+Sensitive writes should happen on the server through:
 
-Examples:
+- Route Handlers for API-style mutations and integrations
+- server-side Supabase clients
+- SQL RPC helpers when atomic updates matter
 
-- donations
+Current examples:
+
 - project creation
 - favorite toggles
 - profile updates
-- future Stripe flows
-
-Preferred mechanisms:
-
-- Server Actions for app-internal writes
-- Route Handlers for webhooks and external integrations
+- support flows
+- Stripe webhook handling
+- comment moderation actions
 
 ### 3. Feature ownership
 
-Each feature should own:
+Each feature owns:
 
-- its data reads
-- its mutations
-- its validation schemas
-- its feature-specific components
+- `queries.ts` for reads
+- `actions.ts` for writes
+- `schemas.ts` for input validation helpers
+
+Current feature areas:
+
+- `auth`
+- `projects`
+- `profiles`
+- `donations`
+- `comments`
+- `moderation`
 
 ### 4. Validation at the boundary
 
-Validation should be centralized per feature rather than spread across form handlers.
+Validation should stay close to the feature boundary rather than inside page components.
 
-Planned approach:
+Current approach:
 
-- Zod schemas in `schemas.ts`
+- lightweight validation helpers in `schemas.ts`
 - server-side validation before writes
+- small unit tests on validation rules
+
+Future option:
+
+- adopt Zod later if the validation layer becomes large enough to justify the extra dependency
 
 ### 5. Database as code
 
-Schema, policies, and SQL helpers should eventually be versioned in the repository.
+The repository should describe database behavior as explicitly as possible.
 
-Target additions:
+Current pieces already versioned:
 
-- `supabase/migrations/`
-- seed data for local development
-- documented RLS policies
+- feature migrations in `supabase/migrations/`
+- local seed data in `supabase/seed.sql`
+- typed public schema snapshot in `src/types/database.ts`
 
-## Near-Term Refactor Plan
+Current limitation:
 
-1. Add repository hygiene files and CI
-2. Introduce `features/` folders without moving every file at once
-3. Extract project reads into `features/projects/queries.ts`
-4. Move critical writes into server actions
-5. Refactor donations to an atomic server-side flow
+- the repository still does not version the full historical baseline schema that existed before this cleanup phase
+
+## Infrastructure Boundaries
+
+### Supabase
+
+Used for:
+
+- auth
+- Postgres data
+- storage
+- RLS-backed data access
+
+Client split:
+
+- `src/lib/supabase/client.ts`
+- `src/lib/supabase/server.ts`
+- `src/lib/supabase/admin.ts`
+
+### Stripe
+
+Used for:
+
+- Checkout session creation
+- webhook verification
+- idempotent payment recording
+
+Main server entry points:
+
+- checkout route handlers
+- webhook route handler
+- donation actions and SQL RPC helpers
+
+## Current Hardening Priorities
+
+The next technical improvements with the best payoff are:
+
+1. server-side filtering and pagination on explore
+2. replace the current in-memory rate limiting with a shared external store for multi-instance deployment
+3. project publication states such as `draft`, `published`, and `archived`
+4. broader automated coverage beyond schema tests
+5. staging deployment validation before the UI refactor
+
+## Current Rate Limiting
+
+Write-heavy API routes now use a lightweight in-memory rate limiter keyed by client IP.
+
+That is good enough for:
+
+- local development
+- portfolio review
+- single-instance staging
+
+It is not the final production architecture for horizontally scaled deployment. The next step at that level would be moving the same policy layer to a shared store such as Redis or Upstash.

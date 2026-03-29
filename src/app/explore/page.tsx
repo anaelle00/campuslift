@@ -1,9 +1,29 @@
 import ExploreProjects from "@/components/projects/explore-projects";
+import { parseExplorePageInput } from "@/features/projects/schemas";
 import { getExplorePageData } from "@/features/projects/queries";
 
-export default async function ExplorePage() {
-  const { user, projects, favoriteProjectIds, errorMessage } =
-    await getExplorePageData();
+type ExplorePageProps = {
+  searchParams: Promise<{
+    category?: string | string[];
+    sort?: string | string[];
+    page?: string | string[];
+  }>;
+};
+
+export default async function ExplorePage({ searchParams }: ExplorePageProps) {
+  const resolvedSearchParams = await searchParams;
+  const filters = parseExplorePageInput(resolvedSearchParams);
+  const {
+    user,
+    projects,
+    favoriteProjectIds,
+    errorMessage,
+    currentCategory,
+    currentSort,
+    currentPage,
+    totalCount,
+    totalPages,
+  } = await getExplorePageData(filters);
 
   if (errorMessage) {
     return (
@@ -28,6 +48,11 @@ export default async function ExplorePage() {
         projects={projects}
         favoriteProjectIds={favoriteProjectIds}
         isLoggedIn={!!user}
+        currentCategory={currentCategory}
+        currentSort={currentSort}
+        currentPage={currentPage}
+        totalCount={totalCount}
+        totalPages={totalPages}
       />
     </main>
   );

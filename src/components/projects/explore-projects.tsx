@@ -1,81 +1,97 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useTransition } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ProjectGrid from "@/components/projects/project-grid";
+import {
+  DEFAULT_EXPLORE_CATEGORY,
+  DEFAULT_EXPLORE_SORT,
+  EXPLORE_CATEGORIES,
+  type ExploreCategory,
+  type ExploreSortOption,
+} from "@/features/projects/schemas";
 import { Project } from "@/types/project";
 
 type Props = {
   projects: Project[];
   favoriteProjectIds?: string[];
   isLoggedIn?: boolean;
+  currentCategory: ExploreCategory;
+  currentSort: ExploreSortOption;
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
 };
-
-const categories = [
-  "All",
-  "Tech",
-  "Association",
-  "Art",
-  "Event",
-  "Social",
-  "Education",
-];
-
-type SortOption = "newest" | "most-funded" | "deadline-soon";
 
 export default function ExploreProjects({
   projects,
   favoriteProjectIds = [],
   isLoggedIn = false,
+  currentCategory,
+  currentSort,
+  currentPage,
+  totalPages,
+  totalCount,
 }: Props) {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const filteredProjects = useMemo(() => {
-    let result = [...projects];
+  function updateExploreParams(updates: {
+    category?: ExploreCategory;
+    sort?: ExploreSortOption;
+    page?: number;
+  }) {
+    const params = new URLSearchParams(searchParams.toString());
+    const nextCategory = updates.category ?? currentCategory;
+    const nextSort = updates.sort ?? currentSort;
+    const nextPage = updates.page ?? currentPage;
 
-    if (selectedCategory !== "All") {
-      result = result.filter((project) => project.category === selectedCategory);
+    if (nextCategory === DEFAULT_EXPLORE_CATEGORY) {
+      params.delete("category");
+    } else {
+      params.set("category", nextCategory);
     }
 
-    if (sortBy === "newest") {
-      result.sort((a, b) => {
-        const aDate = a.created_at ? new Date(a.created_at).getTime() : 0;
-        const bDate = b.created_at ? new Date(b.created_at).getTime() : 0;
-        return bDate - aDate;
-      });
+    if (nextSort === DEFAULT_EXPLORE_SORT) {
+      params.delete("sort");
+    } else {
+      params.set("sort", nextSort);
     }
 
-    if (sortBy === "most-funded") {
-      result.sort((a, b) => b.current_amount - a.current_amount);
+    if (nextPage <= 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(nextPage));
     }
 
-    if (sortBy === "deadline-soon") {
-      result.sort((a, b) => {
-        const aDate = new Date(a.deadline).getTime();
-        const bDate = new Date(b.deadline).getTime();
-        return aDate - bDate;
-      });
-    }
+    const queryString = params.toString();
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
 
-    return result;
-  }, [projects, selectedCategory, sortBy]);
+    startTransition(() => {
+      router.replace(href, { scroll: false });
+    });
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 rounded-2xl border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap gap-2">
-          {categories.map((category) => {
-            const isActive = selectedCategory === category;
+          {EXPLORE_CATEGORIES.map((category) => {
+            const isActive = currentCategory === category;
 
             return (
               <button
                 key={category}
-                onClick={() => setSelectedCategory(category)}
+                type="button"
+                disabled={isPending}
+                onClick={() => updateExploreParams({ category, page: 1 })}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                   isActive
                     ? "bg-black text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                } ${isPending ? "cursor-wait opacity-70" : ""}`}
               >
                 {category}
               </button>
@@ -89,8 +105,14 @@ export default function ExploreProjects({
           </label>
           <select
             id="sort"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            value={currentSort}
+            disabled={isPending}
+            onChange={(e) =>
+              updateExploreParams({
+                sort: e.target.value as ExploreSortOption,
+                page: 1,
+              })
+            }
             className="rounded-xl border px-3 py-2 text-sm"
           >
             <option value="newest">Newest</option>
@@ -100,15 +122,61 @@ export default function ExploreProjects({
         </div>
       </div>
 
-      {filteredProjects.length > 0 ? (
+      <div className="flex flex-col gap-3 rounded-2xl border bg-white p-4 text-sm text-gray-600 shadow-sm md:flex-row md:items-center md:justify-between">
+        <p>
+          {totalCount > 0
+            ? `Showing page ${currentPage} of ${totalPages} across ${totalCount} project${totalCount > 1 ? "s" : ""}.`
+            : "No projects match the current filters."}
+        </p>
+
+        {totalCount > 0 ? (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={currentPage <= 1 || isPending}
+              onClick={() => updateExploreParams({ page: currentPage - 1 })}
+              className="rounded-xl border px-4 py-2 font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              disabled={currentPage >= totalPages || isPending}
+              onClick={() => updateExploreParams({ page: currentPage + 1 })}
+              className="rounded-xl border px-4 py-2 font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        ) : null}
+      </div>
+
+      {projects.length > 0 ? (
         <ProjectGrid
-          projects={filteredProjects}
+          projects={projects}
           favoriteProjectIds={favoriteProjectIds}
           isLoggedIn={isLoggedIn}
         />
       ) : (
         <div className="rounded-2xl border bg-white p-8 text-center text-gray-500 shadow-sm">
-          No projects found for this category.
+          <p>No projects found for this category.</p>
+          {currentCategory !== DEFAULT_EXPLORE_CATEGORY ||
+          currentSort !== DEFAULT_EXPLORE_SORT ? (
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() =>
+                updateExploreParams({
+                  category: DEFAULT_EXPLORE_CATEGORY,
+                  sort: DEFAULT_EXPLORE_SORT,
+                  page: 1,
+                })
+              }
+              className="mt-4 rounded-xl border px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+            >
+              Reset filters
+            </button>
+          ) : null}
         </div>
       )}
     </div>
