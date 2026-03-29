@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import { moderateReport } from "@/features/moderation/actions";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
 export async function PATCH(request: Request, context: RouteContext) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "moderation:reports",
+    max: 30,
+    windowMs: 10 * 60 * 1000,
+    message: "Too many moderation actions in a short time. Please wait before trying again.",
+  });
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const { id } = await context.params;
 
   let action: unknown = null;

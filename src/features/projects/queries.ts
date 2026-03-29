@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCommentCountByProjectIds } from "@/features/comments/queries";
 import { getDonationActivityForUser } from "@/features/donations/queries";
+import {
+  DEFAULT_EXPLORE_CATEGORY,
+  EXPLORE_PAGE_SIZE,
+  type ExploreCategory,
+  type ExploreSortOption,
+} from "@/features/projects/schemas";
 import type { Project } from "@/types/project";
 
 type PledgePreview = {
@@ -52,17 +58,51 @@ export async function getHomePageData() {
   };
 }
 
-export async function getExplorePageData() {
+export async function getExplorePageData(input: {
+  category: ExploreCategory;
+  sortBy: ExploreSortOption;
+  page: number;
+}) {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data, error } = await supabase
+  let countQuery = supabase
     .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .select("id", { count: "exact", head: true });
+
+  if (input.category !== DEFAULT_EXPLORE_CATEGORY) {
+    countQuery = countQuery.eq("category", input.category);
+  }
+
+  const { count, error: countError } = await countQuery;
+  const totalCount = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / EXPLORE_PAGE_SIZE));
+  const currentPage = Math.min(input.page, totalPages);
+  const from = (currentPage - 1) * EXPLORE_PAGE_SIZE;
+  const to = from + EXPLORE_PAGE_SIZE - 1;
+
+  let projectsQuery = supabase.from("projects").select("*");
+
+  if (input.category !== DEFAULT_EXPLORE_CATEGORY) {
+    projectsQuery = projectsQuery.eq("category", input.category);
+  }
+
+  if (input.sortBy === "most-funded") {
+    projectsQuery = projectsQuery
+      .order("current_amount", { ascending: false })
+      .order("created_at", { ascending: false });
+  } else if (input.sortBy === "deadline-soon") {
+    projectsQuery = projectsQuery
+      .order("deadline", { ascending: true })
+      .order("created_at", { ascending: false });
+  } else {
+    projectsQuery = projectsQuery.order("created_at", { ascending: false });
+  }
+
+  const { data, error } = await projectsQuery.range(from, to);
 
   const favoriteProjectIds = user ? await getFavoriteProjectIds(user.id) : [];
   const projects = await attachCommentCounts((data ?? []) as Project[]);
@@ -71,7 +111,12 @@ export async function getExplorePageData() {
     user,
     projects,
     favoriteProjectIds,
-    errorMessage: error?.message ?? null,
+    currentCategory: input.category,
+    currentSort: input.sortBy,
+    currentPage,
+    totalCount,
+    totalPages,
+    errorMessage: countError?.message ?? error?.message ?? null,
   };
 }
 

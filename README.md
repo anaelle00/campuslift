@@ -130,9 +130,11 @@ Then copy the webhook signing secret printed by Stripe into
 - `npm run build` creates a production build
 - `npm run start` starts the production server
 - `npm run lint` runs ESLint
+- `npm run test` runs Vitest unit tests
+- `npm run test:watch` runs Vitest in watch mode
 - `npm run typegen` generates Next.js route types
 - `npm run typecheck` generates Next.js types and runs TypeScript checks
-- `npm run check` runs lint and typecheck together
+- `npm run check` runs lint, typecheck, and unit tests together
 
 ## Key Documentation
 
@@ -147,11 +149,11 @@ Then copy the webhook signing secret printed by Stripe into
 
 ## Current Priorities
 
-1. push the current clean state to GitHub
-2. deploy a staging version and validate external integrations
-3. UI refinement and stronger visual identity
-4. documentation and GitHub polish
-5. notifications, search, project states, and S3 uploads
+1. deploy a staging version and validate external integrations
+2. UI refinement and stronger visual identity
+3. server-side filtering, pagination, and route hardening
+4. project states and richer creator workflows
+5. notifications, search, and S3 uploads
 
 ## Status
 

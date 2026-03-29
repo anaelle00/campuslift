@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupportCheckoutSession } from "@/features/donations/actions";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,17 @@ type RouteContext = {
 };
 
 export async function POST(request: Request, context: RouteContext) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "donations:checkout",
+    max: 10,
+    windowMs: 5 * 60 * 1000,
+    message: "Too many checkout attempts. Please wait a moment before trying again.",
+  });
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const { id } = await context.params;
 
   let amount: unknown = null;

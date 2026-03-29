@@ -24,6 +24,7 @@ This order keeps infrastructure, product logic, and visual redesign from being m
 - confirm `docs/database.md` and `supabase/README.md` match the current schema and workflow
 - confirm `docs/product-roadmap.md` reflects the current priorities
 - run `npm run lint`
+- run `npm run test`
 - run `npm run typecheck`
 - review `git status` and remove accidental edits
 
