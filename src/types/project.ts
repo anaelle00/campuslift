@@ -3,18 +3,22 @@ export type ProjectCategory =
   | "Association"
   | "Art"
   | "Event"
-  | "Social";
+  | "Social"
+  | "Education";
 
 export type Project = {
   id: string;
   title: string;
-  shortDescription: string;
+  short_description: string;
   description: string;
-  category: ProjectCategory;
-  ownerName: string;
-  targetAmount: number;
-  currentAmount: number;
-  imageUrl: string;
+  category: ProjectCategory | string;
+  owner_name: string;
+  owner_username: string;
+  target_amount: number;
+  current_amount: number;
+  image_url: string;
   deadline: string;
-  supportersCount: number;
+  supporters_count: number;
+  comments_count?: number;
+  created_at?: string;
 };
