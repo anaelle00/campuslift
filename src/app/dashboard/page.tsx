@@ -1,63 +1,180 @@
+import Link from "next/link";
 import StatsCard from "@/components/dashboard/stats-card";
+import SupportHistoryList from "@/components/donations/support-history-list";
 import ProjectGrid from "@/components/projects/project-grid";
-import { mockProjects } from "@/lib/mock-data";
+import { getDashboardPageData } from "@/features/projects/queries";
 
-export default function DashboardPage() {
-  const myProjects = mockProjects.slice(0, 2);
-  const supportedProjects = mockProjects.slice(1, 3);
+export default async function DashboardPage() {
+  const {
+    user,
+    myProjects,
+    savedProjects,
+    favoriteProjectIds,
+    myProjectsError,
+    favoritesError,
+    totalFundingRaised,
+    totalSupporters,
+    totalSentAmount,
+    sentPaymentsCount,
+    sentHistory,
+    receivedHistory,
+  } = await getDashboardPageData();
+
+  if (!user) {
+    return (
+      <main className="mx-auto max-w-4xl space-y-6 px-6 py-10">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <p className="text-gray-600">
+          You need to be logged in to view your dashboard.
+        </p>
+        <Link
+          href="/login"
+          className="inline-block rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          Log in
+        </Link>
+      </main>
+    );
+  }
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10 space-y-10">
+    <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
       <section className="space-y-2">
-        <h1 className="text-3xl font-bold">Welcome back, Anaelle</h1>
+        <h1 className="text-3xl font-bold">Welcome back</h1>
         <p className="text-gray-600">
-          Here’s an overview of your activity and the projects you care about.
+          Here is an overview of your projects and saved ideas.
         </p>
+        <p className="text-sm text-gray-500">{user.email}</p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatsCard
           label="Projects created"
-          value="2"
-          helper="1 active this week"
+          value={String(myProjects.length)}
+          helper="Projects linked to your account"
         />
         <StatsCard
-          label="Total pledged"
-          value="$24"
-          helper="Across 3 student projects"
+          label="Funding raised"
+          value={`$${totalFundingRaised}`}
+          helper="Across your projects"
         />
         <StatsCard
-          label="Supporters reached"
-          value="30"
-          helper="Across your published projects"
+          label="Total supporters"
+          value={String(totalSupporters)}
+          helper="Community supporters"
         />
         <StatsCard
           label="Saved projects"
-          value="4"
-          helper="Ideas you may want to support"
+          value={String(savedProjects.length)}
+          helper="Projects you bookmarked"
+        />
+        <StatsCard
+          label="You pledged"
+          value={`$${totalSentAmount}`}
+          helper="Total support you have sent"
+        />
+        <StatsCard
+          label="Payments made"
+          value={String(sentPaymentsCount)}
+          helper="Successful support payments"
+        />
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <SupportHistoryList
+          title="Payments you made"
+          description="Your most recent support payments across CampusLift projects."
+          counterpartyLabel="Creator"
+          emptyTitle="No payments yet"
+          emptyDescription="Support a project to start building your payment history."
+          items={sentHistory}
+        />
+        <SupportHistoryList
+          title="Payments received"
+          description="Recent supporters who contributed to your own projects."
+          counterpartyLabel="Supporter"
+          emptyTitle="No supporters yet"
+          emptyDescription="Once people back your projects, their payments will appear here."
+          items={receivedHistory}
         />
       </section>
 
       <section className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold">My projects</h2>
-          <p className="text-gray-600">
-            Track the initiatives you’ve created and their current progress.
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">My projects</h2>
+            <p className="text-gray-600">
+              Track the initiatives you have created and their current progress.
+            </p>
+          </div>
+
+          <Link
+            href="/create"
+            className="rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            Create new project
+          </Link>
         </div>
 
-        <ProjectGrid projects={myProjects} />
+        {myProjectsError ? (
+          <div className="rounded-2xl border bg-white p-6 text-red-500 shadow-sm">
+            Error loading your projects: {myProjectsError}
+          </div>
+        ) : myProjects.length > 0 ? (
+          <ProjectGrid
+            projects={myProjects}
+            favoriteProjectIds={favoriteProjectIds}
+            isLoggedIn={true}
+          />
+        ) : (
+          <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
+            <h3 className="text-lg font-semibold">No projects yet</h3>
+            <p className="mt-2 text-gray-600">
+              You have not created any projects yet.
+            </p>
+            <Link
+              href="/create"
+              className="mt-4 inline-block rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              Start your first project
+            </Link>
+          </div>
+        )}
       </section>
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-2xl font-bold">Projects I supported</h2>
+          <h2 className="text-2xl font-bold">Saved projects</h2>
           <p className="text-gray-600">
-            Keep an eye on the student ideas you’ve backed.
+            These are the projects you have marked as favorites.
           </p>
         </div>
 
-        <ProjectGrid projects={supportedProjects} />
+        {favoritesError ? (
+          <div className="rounded-2xl border bg-white p-6 text-red-500 shadow-sm">
+            Error loading favorites: {favoritesError}
+          </div>
+        ) : savedProjects.length > 0 ? (
+          <ProjectGrid
+            projects={savedProjects}
+            favoriteProjectIds={favoriteProjectIds}
+            isLoggedIn={true}
+          />
+        ) : (
+          <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
+            <h3 className="text-lg font-semibold">No saved projects yet</h3>
+            <p className="mt-2 text-gray-600">
+              Explore projects and click the heart icon to save the ones you
+              like.
+            </p>
+            <Link
+              href="/explore"
+              className="mt-4 inline-block rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              Explore projects
+            </Link>
+          </div>
+        )}
       </section>
     </main>
   );

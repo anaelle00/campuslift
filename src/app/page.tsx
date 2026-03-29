@@ -1,8 +1,11 @@
 import Link from "next/link";
 import ProjectGrid from "@/components/projects/project-grid";
-import { mockProjects } from "@/lib/mock-data";
+import { getHomePageData } from "@/features/projects/queries";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { user, featuredProjects, favoriteProjectIds, errorMessage } =
+    await getHomePageData();
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <section className="grid gap-8 rounded-3xl border bg-white p-8 shadow-sm md:grid-cols-2 md:items-center">
@@ -88,9 +91,16 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <ProjectGrid projects={mockProjects} />
+        {errorMessage ? (
+          <p className="text-red-500">Error loading featured projects.</p>
+        ) : (
+          <ProjectGrid
+            projects={featuredProjects}
+            favoriteProjectIds={favoriteProjectIds}
+            isLoggedIn={!!user}
+          />
+        )}
       </section>
     </main>
   );
 }
-

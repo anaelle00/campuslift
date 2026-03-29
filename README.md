@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CampusLift
+
+CampusLift is a student-focused crowdfunding platform where creators can publish projects, build a public profile, receive community support, and interact through threaded discussions.
+
+The repository is used both as:
+
+- a real full-stack product build
+- a portfolio project aimed at stronger company-style engineering quality
+
+## Current Product Scope
+
+CampusLift currently includes:
+
+- Supabase authentication
+- public project listing and project detail pages
+- project creation with image upload
+- favorites / saved projects
+- user profiles
+- a creator dashboard
+- Stripe Checkout with webhook-based support recording
+- donation history in the dashboard and profile
+- threaded comments with replies
+- comment likes / dislikes
+- comment reports
+- an admin moderation dashboard
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- Supabase Auth
+- Supabase Postgres
+- Supabase Storage
+- Stripe Checkout
+
+## Repository Structure
+
+```text
+src/
+  app/          routes, layouts, pages, route handlers
+  components/   reusable UI and page sections
+  features/     feature-oriented server logic and queries
+  lib/          framework and infrastructure helpers
+  types/        shared TypeScript types
+docs/           architecture, roadmap, database, testing
+supabase/       SQL migrations
+```
+
+See [architecture.md](docs/architecture.md) for the architecture direction.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20 or newer
+- npm
+- a Supabase project
+- a Stripe account for payment testing
+
+### Environment Variables
+
+Create a local environment file from the example:
+
+```bash
+cp .env.example .env.local
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Required variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
+Optional:
+
+- `STRIPE_CURRENCY` defaults to `cad`
+- `NEXT_PUBLIC_APP_URL` can override the URL used in Stripe redirects
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Apply the SQL migrations in `supabase/migrations/`.
+
+3. Create at least one account in the app, then optionally run `supabase/seed.sql`
+   to sync `profiles` from `auth.users` and create one demo project locally.
+
+4. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+6. If you want admin moderation access, promote a profile manually:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+update public.profiles
+set role = 'admin'
+where username = 'your_username';
+```
 
-## Learn More
+7. If you want to test Stripe locally, forward webhooks to the Next.js route:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Then copy the webhook signing secret printed by Stripe into
+`STRIPE_WEBHOOK_SECRET`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Available Scripts
 
-## Deploy on Vercel
+- `npm run dev` starts the local development server
+- `npm run build` creates a production build
+- `npm run start` starts the production server
+- `npm run lint` runs ESLint
+- `npm run typegen` generates Next.js route types
+- `npm run typecheck` generates Next.js types and runs TypeScript checks
+- `npm run check` runs lint and typecheck together
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Key Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [architecture.md](docs/architecture.md)
+- [database.md](docs/database.md)
+- [deployment.md](docs/deployment.md)
+- [release-checklist.md](docs/release-checklist.md)
+- [testing.md](docs/testing.md)
+- [product-roadmap.md](docs/product-roadmap.md)
+- [enterprise-project-report.md](docs/enterprise-project-report.md)
+- [supabase/README.md](supabase/README.md)
+
+## Current Priorities
+
+1. push the current clean state to GitHub
+2. deploy a staging version and validate external integrations
+3. UI refinement and stronger visual identity
+4. documentation and GitHub polish
+5. notifications, search, project states, and S3 uploads
+
+## Status
+
+CampusLift is an active in-progress product. The core flows work, the repository is now feature-oriented, and the next phase is cleanup, UI improvement, and stronger repo polish before another large feature wave.
