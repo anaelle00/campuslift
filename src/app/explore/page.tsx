@@ -7,6 +7,7 @@ type ExplorePageProps = {
     category?: string | string[];
     sort?: string | string[];
     page?: string | string[];
+    search?: string | string[];
   }>;
 };
 
@@ -20,6 +21,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
     errorMessage,
     currentCategory,
     currentSort,
+    currentSearch,
     currentPage,
     totalCount,
     totalPages,
@@ -51,6 +53,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         isLoggedIn={!!user}
         currentCategory={currentCategory}
         currentSort={currentSort}
+        currentSearch={currentSearch}
         currentPage={currentPage}
         totalCount={totalCount}
         totalPages={totalPages}

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { recordStripeCheckoutSession } from "@/features/donations/actions";
 import { getStripeServer, getStripeWebhookSecret } from "@/lib/stripe/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { sendSupportNotification } from "@/lib/resend";
 
 export const runtime = "nodejs";
 
@@ -63,6 +65,40 @@ export async function POST(request: Request) {
         return NextResponse.json(result, {
           status: result.status ?? 500,
         });
+      }
+
+      // Send email notification to project owner (non-blocking)
+      const projectId = session.metadata?.projectId;
+      const amountTotal = session.amount_total;
+
+      if (projectId && amountTotal) {
+        try {
+          const supabase = createAdminClient();
+
+          const { data: project } = await supabase
+            .from("projects")
+            .select("title, owner_id, owner_name")
+            .eq("id", projectId)
+            .single();
+
+          if (project?.owner_id) {
+            const { data: ownerAuth } = await supabase.auth.admin.getUserById(
+              project.owner_id,
+            );
+
+            if (ownerAuth.user?.email) {
+              await sendSupportNotification({
+                ownerEmail: ownerAuth.user.email,
+                ownerName: project.owner_name,
+                projectTitle: project.title,
+                projectId,
+                amount: amountTotal / 100,
+              });
+            }
+          }
+        } catch {
+          // Email failure must never break the payment flow
+        }
       }
     }
   }

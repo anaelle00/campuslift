@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run --pool=threads",
-    "test:watch": "vitest --pool=threads",
+    "test": "node scripts/run-vitest.mjs run",
+    "test:watch": "node scripts/run-vitest.mjs watch",
     "typegen": "next typegen",
     "typecheck": "next typegen && node scripts/ensure-next-cache-life.mjs && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run test"
@@ -25,6 +25,7 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "resend": "^6.10.0",
     "shadcn": "^4.0.0",
     "stripe": "^21.0.1",
     "tailwind-merge": "^3.5.0",

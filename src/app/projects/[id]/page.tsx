@@ -54,9 +54,20 @@ export default async function ProjectDetailsPage({
       </div>
 
       <div className="space-y-3">
-        <span className="inline-block rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-sm font-medium text-primary">
-          {project.category}
-        </span>
+        <div className="flex items-center justify-between">
+          <span className="inline-block rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-sm font-medium text-primary">
+            {project.category}
+          </span>
+
+          {user?.id === project.owner_id && (
+            <Link
+              href={`/projects/${project.id}/edit`}
+              className="rounded-xl border px-4 py-2 text-sm font-medium transition hover:bg-accent"
+            >
+              Edit project
+            </Link>
+          )}
+        </div>
 
         <h1 className="font-display text-3xl font-bold">{project.title}</h1>
 

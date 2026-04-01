@@ -62,6 +62,7 @@ export async function getExplorePageData(input: {
   category: ExploreCategory;
   sortBy: ExploreSortOption;
   page: number;
+  search: string | null;
 }) {
   const supabase = await createClient();
 
@@ -77,6 +78,13 @@ export async function getExplorePageData(input: {
     countQuery = countQuery.eq("category", input.category);
   }
 
+  if (input.search) {
+    const pattern = `%${input.search}%`;
+    countQuery = countQuery.or(
+      `title.ilike.${pattern},short_description.ilike.${pattern}`,
+    );
+  }
+
   const { count, error: countError } = await countQuery;
   const totalCount = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / EXPLORE_PAGE_SIZE));
@@ -88,6 +96,13 @@ export async function getExplorePageData(input: {
 
   if (input.category !== DEFAULT_EXPLORE_CATEGORY) {
     projectsQuery = projectsQuery.eq("category", input.category);
+  }
+
+  if (input.search) {
+    const pattern = `%${input.search}%`;
+    projectsQuery = projectsQuery.or(
+      `title.ilike.${pattern},short_description.ilike.${pattern}`,
+    );
   }
 
   if (input.sortBy === "most-funded") {
@@ -113,6 +128,7 @@ export async function getExplorePageData(input: {
     favoriteProjectIds,
     currentCategory: input.category,
     currentSort: input.sortBy,
+    currentSearch: input.search,
     currentPage,
     totalCount,
     totalPages,

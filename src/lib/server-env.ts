@@ -7,4 +7,5 @@ export const serverEnv = {
   STRIPE_SECRET_KEY: getRequiredEnv("STRIPE_SECRET_KEY"),
   STRIPE_WEBHOOK_SECRET: getRequiredEnv("STRIPE_WEBHOOK_SECRET"),
   STRIPE_CURRENCY: (getOptionalEnv("STRIPE_CURRENCY") ?? "cad").toLowerCase(),
+  RESEND_API_KEY: getOptionalEnv("RESEND_API_KEY"),
 };
