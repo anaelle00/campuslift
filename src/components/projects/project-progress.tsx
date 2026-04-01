@@ -1,5 +1,3 @@
-import React from "react";
-
 type Props = {
   current: number;
   target: number;
@@ -10,16 +8,16 @@ export default function ProjectProgress({ current, target }: Props) {
 
   return (
     <div className="w-full">
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
         <div
-          className="h-full bg-emerald-500 transition-all"
+          className="h-full rounded-full bg-primary transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
 
-      <div className="flex justify-between text-xs text-gray-500 mt-1">
-        <span>${current}</span>
-        <span>${target}</span>
+      <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
+        <span className="font-medium text-foreground">${current}</span>
+        <span>${target} goal</span>
       </div>
     </div>
   );

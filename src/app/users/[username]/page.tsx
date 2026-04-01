@@ -14,7 +14,7 @@ export default async function UserPage({ params }: Props) {
     return (
       <main className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="text-3xl font-bold">User not found</h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-muted-foreground">
           No public profile matches @{username}.
         </p>
       </main>
@@ -29,22 +29,22 @@ export default async function UserPage({ params }: Props) {
           alt="Profile avatar"
           width={96}
           height={96}
-          className="h-24 w-24 rounded-full border object-cover"
+          className="h-24 w-24 rounded-full border-2 border-primary/20 object-cover shadow-sm"
         />
 
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold">
+        <div className="space-y-1.5">
+          <h1 className="font-display text-3xl font-bold">
             {profile.display_name || profile.username}
           </h1>
 
-          <p className="text-gray-500">@{profile.username}</p>
+          <p className="text-sm text-muted-foreground">@{profile.username}</p>
 
           {profile.organization ? (
-            <p className="text-gray-600">{profile.organization}</p>
+            <p className="text-sm font-medium text-primary">{profile.organization}</p>
           ) : null}
 
           {profile.bio ? (
-            <p className="max-w-xl text-gray-700">{profile.bio}</p>
+            <p className="max-w-xl text-muted-foreground">{profile.bio}</p>
           ) : null}
 
           {profile.website ? (
@@ -52,7 +52,7 @@ export default async function UserPage({ params }: Props) {
               href={profile.website}
               target="_blank"
               rel="noreferrer"
-              className="text-blue-600 underline"
+              className="text-sm text-primary underline hover:opacity-80"
             >
               {profile.website}
             </a>
@@ -62,8 +62,8 @@ export default async function UserPage({ params }: Props) {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-2xl font-bold">Projects created</h2>
-          <p className="text-gray-600">Initiatives started by this creator.</p>
+          <h2 className="font-display text-2xl font-bold">Projects created</h2>
+          <p className="text-muted-foreground">Initiatives started by this creator.</p>
         </div>
 
         <ProjectGrid projects={projects} />

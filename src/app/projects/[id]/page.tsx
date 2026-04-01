@@ -35,13 +35,14 @@ export default async function ProjectDetailsPage({
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-6">
-      <div className="relative h-72 w-full overflow-hidden rounded-2xl">
+      <div className="relative h-80 w-full overflow-hidden rounded-2xl">
         <Image
           src={project.image_url}
           alt={project.title}
           fill
           className="object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
         <div className="absolute right-4 top-4">
           <FavoriteButton
@@ -53,53 +54,61 @@ export default async function ProjectDetailsPage({
       </div>
 
       <div className="space-y-3">
-        <span className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm">
+        <span className="inline-block rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-sm font-medium text-primary">
           {project.category}
         </span>
 
-        <h1 className="text-3xl font-bold">{project.title}</h1>
+        <h1 className="font-display text-3xl font-bold">{project.title}</h1>
 
-        <p className="text-gray-600">{project.description}</p>
+        <p className="leading-relaxed text-muted-foreground">{project.description}</p>
 
-        <div className="text-sm text-gray-500">
-          By{" "}
-          <Link
-            href={`/users/${project.owner_username}`}
-            className="font-medium hover:underline"
-          >
-            {project.owner_name}
-          </Link>{" "}
-          | Deadline: {project.deadline}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>By{" "}
+            <Link
+              href={`/users/${project.owner_username}`}
+              className="font-medium text-foreground hover:text-primary hover:underline"
+            >
+              {project.owner_name}
+            </Link>
+          </span>
+          <span className="h-1 w-1 rounded-full bg-border" />
+          <span>Deadline: {project.deadline}</span>
         </div>
       </div>
 
-      <div className="space-y-4 rounded-2xl border bg-white p-5">
-        <h2 className="text-xl font-semibold">Funding Progress</h2>
+      <div className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
+        <h2 className="font-display text-xl font-semibold">Funding Progress</h2>
 
         <ProjectProgress
           current={project.current_amount}
           target={project.target_amount}
         />
 
-        <p className="text-sm text-gray-500">
-          {project.supporters_count} supporters | {commentsPageData.totalCount} comments
-        </p>
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+          <span>{project.supporters_count} supporters</span>
+          <span className="h-1 w-1 rounded-full bg-border" />
+          <span>{commentsPageData.totalCount} comments</span>
+        </div>
 
         <SupportProjectForm projectId={project.id} isLoggedIn={!!user} />
 
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Recent supporters</h3>
-
-          {pledges.length ? (
-            <ul className="space-y-1 text-sm text-gray-600">
+        {pledges.length > 0 && (
+          <div className="space-y-2 border-t pt-4">
+            <h3 className="font-display text-base font-semibold">Recent supporters</h3>
+            <ul className="space-y-1.5">
               {pledges.map((pledge) => (
-                <li key={pledge.created_at}>${pledge.amount} pledged</li>
+                <li key={pledge.created_at} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span className="font-medium text-foreground">${pledge.amount}</span> pledged
+                </li>
               ))}
             </ul>
-          ) : (
-            <p className="text-sm text-gray-500">No supporters yet.</p>
-          )}
-        </div>
+          </div>
+        )}
+
+        {pledges.length === 0 && (
+          <p className="text-sm text-muted-foreground border-t pt-4">No supporters yet — be the first.</p>
+        )}
       </div>
 
       <CommentsSection

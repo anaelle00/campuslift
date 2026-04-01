@@ -28,7 +28,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   if (errorMessage) {
     return (
       <main className="mx-auto max-w-6xl p-6">
-        <h1 className="text-3xl font-bold">Explore Projects</h1>
+        <h1 className="font-display text-3xl font-bold">Explore Projects</h1>
         <p className="mt-4 text-red-500">
           Error loading projects: {errorMessage}
         </p>
@@ -38,11 +38,12 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 p-6">
-      <h1 className="text-3xl font-bold">Explore Projects</h1>
-
-      <p className="text-gray-600">
-        Discover student initiatives and support the ideas you believe in.
-      </p>
+      <div className="space-y-1">
+        <h1 className="font-display text-3xl font-bold">Explore Projects</h1>
+        <p className="text-muted-foreground">
+          Discover student initiatives and support the ideas you believe in.
+        </p>
+      </div>
 
       <ExploreProjects
         projects={projects}

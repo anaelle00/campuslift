@@ -18,13 +18,13 @@ export default async function SupportCancelPage({ searchParams }: CancelPageProp
     <main className="mx-auto max-w-2xl space-y-6 p-6">
       <div className="rounded-3xl border bg-white p-8 shadow-sm">
         <div className="space-y-3">
-          <span className="inline-flex rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+          <span className="inline-flex rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
             Checkout canceled
           </span>
 
-          <h1 className="text-3xl font-bold">No payment was processed</h1>
+          <h1 className="font-display text-3xl font-bold">No payment was processed</h1>
 
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             You can return to the project page and try again whenever you want.
           </p>
         </div>
@@ -32,14 +32,14 @@ export default async function SupportCancelPage({ searchParams }: CancelPageProp
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href={projectId ? `/projects/${projectId}` : "/explore"}
-            className="rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90"
+            className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
           >
             Back to project
           </Link>
 
           <Link
             href="/explore"
-            className="rounded-lg border px-4 py-2 transition hover:bg-gray-50"
+            className="rounded-xl border border-border px-4 py-2 text-sm font-medium transition hover:bg-accent"
           >
             Explore projects
           </Link>
