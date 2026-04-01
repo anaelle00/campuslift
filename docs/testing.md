@@ -15,6 +15,7 @@ Repository-level checks:
 
 The repository now includes a first Vitest layer for feature validation helpers:
 
+- `vitest.config.mjs`
 - `src/features/donations/schemas.test.ts`
 - `src/features/projects/schemas.test.ts`
 - `src/features/comments/schemas.test.ts`

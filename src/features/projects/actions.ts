@@ -106,6 +106,102 @@ export async function createProject(
   return actionSuccess({ redirectTo: "/explore" }, "Project created successfully.");
 }
 
+export async function updateProject(
+  projectId: string,
+  formData: FormData,
+): Promise<ActionResult<{ redirectTo: string }>> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return actionFailure("You must be logged in to edit a project.", 401);
+  }
+
+  const { data: existing, error: existingError } = await supabase
+    .from("projects")
+    .select("id, owner_id, image_url")
+    .eq("id", projectId)
+    .single();
+
+  if (existingError || !existing) {
+    return actionFailure("Project not found.", 404);
+  }
+
+  if (existing.owner_id !== user.id) {
+    return actionFailure("You don't have permission to edit this project.", 403);
+  }
+
+  const input: CreateProjectInput = {
+    title: String(formData.get("title") ?? ""),
+    shortDescription: String(formData.get("shortDescription") ?? ""),
+    description: String(formData.get("description") ?? ""),
+    category: String(formData.get("category") ?? ""),
+    ownerName: String(formData.get("ownerName") ?? ""),
+    targetAmount: Number(formData.get("targetAmount") ?? ""),
+    deadline: String(formData.get("deadline") ?? ""),
+  };
+
+  const validationError = validateCreateProjectInput(input);
+
+  if (validationError) {
+    return actionFailure(validationError);
+  }
+
+  let finalImageUrl = existing.image_url as string;
+  const imageFile = getImageFile(formData);
+
+  if (imageFile) {
+    if (!imageFile.type.startsWith("image/")) {
+      return actionFailure("Please upload a valid image file.");
+    }
+
+    const fileExt = imageFile.name.split(".").pop() || "jpg";
+    const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+    const filePath = `projects/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("project-images")
+      .upload(filePath, imageFile, { contentType: imageFile.type });
+
+    if (uploadError) {
+      return actionFailure(uploadError.message);
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("project-images")
+      .getPublicUrl(filePath);
+
+    finalImageUrl = publicUrlData.publicUrl;
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      title: input.title.trim(),
+      short_description: input.shortDescription.trim(),
+      description: input.description.trim(),
+      category: input.category.trim(),
+      owner_name: input.ownerName.trim(),
+      target_amount: input.targetAmount,
+      image_url: finalImageUrl,
+      deadline: input.deadline,
+    })
+    .eq("id", projectId);
+
+  if (error) {
+    return actionFailure(error.message);
+  }
+
+  return actionSuccess(
+    { redirectTo: `/projects/${projectId}` },
+    "Project updated successfully.",
+  );
+}
+
 export async function toggleFavorite(
   projectId: string,
 ): Promise<ActionResult<{ isFavorite: boolean }>> {

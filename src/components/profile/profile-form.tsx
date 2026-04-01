@@ -112,14 +112,23 @@ export default function ProfileForm({ user, profile }: Props) {
       <section className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-200">
           {avatarPreview ? (
-            <Image
-              src={avatarPreview}
-              alt="Profile avatar"
-              width={96}
-              height={96}
-              unoptimized
-              className="h-full w-full object-cover"
-            />
+            avatarPreview.startsWith("blob:") ? (
+              // A local object URL cannot be optimized by Next/Image.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarPreview}
+                alt="Profile avatar"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Image
+                src={avatarPreview}
+                alt="Profile avatar"
+                width={96}
+                height={96}
+                className="h-full w-full object-cover"
+              />
+            )
           ) : null}
         </div>
 

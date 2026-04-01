@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls c:/Users/mathe/campuslift/.env*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

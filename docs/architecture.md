@@ -126,11 +126,20 @@ Main server entry points:
 
 The next technical improvements with the best payoff are:
 
-1. server-side filtering and pagination on explore
-2. replace the current in-memory rate limiting with a shared external store for multi-instance deployment
-3. project publication states such as `draft`, `published`, and `archived`
-4. broader automated coverage beyond schema tests
-5. staging deployment validation before the UI refactor
+1. replace the current in-memory rate limiting with a shared external store for multi-instance deployment
+2. project publication states such as `draft`, `published`, and `archived`
+3. broader automated coverage beyond schema tests
+4. staging deployment validation before the UI refactor
+5. centralized deployment monitoring and operational visibility
+
+## Current Environment Validation
+
+Runtime environment access is now centralized through:
+
+- `src/lib/env.ts`
+- `src/lib/server-env.ts`
+
+This keeps missing or invalid environment variables from surfacing as scattered runtime failures across multiple features.
 
 ## Current Rate Limiting
 

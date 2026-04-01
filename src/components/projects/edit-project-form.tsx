@@ -2,17 +2,23 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PROJECT_CATEGORIES } from "@/features/projects/schemas";
+import type { Project } from "@/types/project";
 
-export default function CreateProjectForm() {
+type Props = {
+  project: Project;
+};
+
+export default function EditProjectForm({ project }: Props) {
   const router = useRouter();
 
-  const [title, setTitle] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Tech");
-  const [ownerName, setOwnerName] = useState("");
-  const [targetAmount, setTargetAmount] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [title, setTitle] = useState(project.title);
+  const [shortDescription, setShortDescription] = useState(project.short_description);
+  const [description, setDescription] = useState(project.description);
+  const [category, setCategory] = useState(project.category);
+  const [ownerName, setOwnerName] = useState(project.owner_name);
+  const [targetAmount, setTargetAmount] = useState(String(project.target_amount));
+  const [deadline, setDeadline] = useState(project.deadline);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,20 +26,6 @@ export default function CreateProjectForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessage("");
-
-    if (
-      !title.trim() ||
-      !shortDescription.trim() ||
-      !description.trim() ||
-      !category.trim() ||
-      !ownerName.trim() ||
-      !targetAmount.trim() ||
-      !deadline.trim()
-    ) {
-      setErrorMessage("Please fill in all required fields.");
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
@@ -50,38 +42,36 @@ export default function CreateProjectForm() {
         formData.append("imageFile", imageFile);
       }
 
-      const response = await fetch("/api/projects", {
-        method: "POST",
+      const response = await fetch(`/api/projects/${project.id}`, {
+        method: "PATCH",
         body: formData,
       });
+
       const result = (await response.json()) as {
         success: boolean;
         message?: string;
         data?: { redirectTo: string };
       };
 
-      if (response.status === 401) {
-        setErrorMessage("You must be logged in to create a project.");
-        router.push("/login");
-        return;
-      }
-
       if (!response.ok || !result.success) {
         setErrorMessage(result.message ?? "Something went wrong.");
         return;
       }
 
-      router.push(result.data?.redirectTo ?? "/explore");
+      router.push(result.data?.redirectTo ?? `/projects/${project.id}`);
       router.refresh();
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const inputClass =
+    "w-full rounded-xl border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 rounded-3xl border bg-white p-6 shadow-sm"
+      className="space-y-6 rounded-3xl border bg-card p-6 shadow-sm"
     >
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium">
@@ -92,8 +82,7 @@ export default function CreateProjectForm() {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Ex: 3D printed prototype for robotics demo"
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className={inputClass}
         />
       </div>
 
@@ -106,8 +95,7 @@ export default function CreateProjectForm() {
           type="text"
           value={shortDescription}
           onChange={(e) => setShortDescription(e.target.value)}
-          placeholder="A short one-line summary of your project"
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className={inputClass}
         />
       </div>
 
@@ -119,9 +107,8 @@ export default function CreateProjectForm() {
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Explain your project, why it matters, and what the funding will support."
           rows={6}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className={inputClass}
         />
       </div>
 
@@ -134,14 +121,11 @@ export default function CreateProjectForm() {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className={inputClass}
           >
-            <option>Tech</option>
-            <option>Association</option>
-            <option>Art</option>
-            <option>Event</option>
-            <option>Social</option>
-            <option>Education</option>
+            {PROJECT_CATEGORIES.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
           </select>
         </div>
 
@@ -154,25 +138,23 @@ export default function CreateProjectForm() {
             type="text"
             value={ownerName}
             onChange={(e) => setOwnerName(e.target.value)}
-            placeholder="Ex: Anaelle"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className={inputClass}
           />
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <label htmlFor="goal" className="text-sm font-medium">
+          <label htmlFor="targetAmount" className="text-sm font-medium">
             Funding goal
           </label>
           <input
-            id="goal"
+            id="targetAmount"
             type="number"
             min="1"
             value={targetAmount}
             onChange={(e) => setTargetAmount(e.target.value)}
-            placeholder="150"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className={inputClass}
           />
         </div>
 
@@ -185,25 +167,23 @@ export default function CreateProjectForm() {
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className={inputClass}
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <label htmlFor="imageFile" className="text-sm font-medium">
-          Project image
+          Project image{" "}
+          <span className="text-muted-foreground font-normal">(leave empty to keep current)</span>
         </label>
         <input
           id="imageFile"
           type="file"
           accept="image/*"
           onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm"
+          className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary"
         />
-        <p className="text-sm text-gray-500">
-          Upload an image for your project.
-        </p>
       </div>
 
       {errorMessage ? (
@@ -212,11 +192,18 @@ export default function CreateProjectForm() {
 
       <div className="flex items-center justify-end gap-3 pt-2">
         <button
+          type="button"
+          onClick={() => router.back()}
+          className="rounded-xl border px-5 py-3 text-sm font-medium transition hover:bg-accent"
+        >
+          Cancel
+        </button>
+        <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Publishing..." : "Publish project"}
+          {isSubmitting ? "Saving..." : "Save changes"}
         </button>
       </div>
     </form>

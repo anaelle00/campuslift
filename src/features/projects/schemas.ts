@@ -60,10 +60,12 @@ export function parseExplorePageInput(input: {
   category?: SearchParamValue;
   sort?: SearchParamValue;
   page?: SearchParamValue;
+  search?: SearchParamValue;
 }) {
   const rawCategory = getSearchParamValue(input.category);
   const rawSort = getSearchParamValue(input.sort);
   const rawPage = getSearchParamValue(input.page);
+  const rawSearch = getSearchParamValue(input.search);
 
   const category = EXPLORE_CATEGORIES.includes(rawCategory as ExploreCategory)
     ? (rawCategory as ExploreCategory)
@@ -76,9 +78,12 @@ export function parseExplorePageInput(input: {
   const parsedPage = Number.parseInt(rawPage ?? "", 10);
   const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
+  const search = rawSearch?.trim() || null;
+
   return {
     category,
     sortBy,
     page,
+    search,
   };
 }

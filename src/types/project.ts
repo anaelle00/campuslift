@@ -8,6 +8,7 @@ export type ProjectCategory =
 
 export type Project = {
   id: string;
+  owner_id: string;
   title: string;
   short_description: string;
   description: string;
