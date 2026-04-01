@@ -12,12 +12,12 @@ export default async function ProfilePage() {
       <main className="mx-auto max-w-3xl px-6 py-10">
         <div className="rounded-2xl border bg-white p-8 shadow-sm">
           <h1 className="text-3xl font-bold">Profile</h1>
-          <p className="mt-3 text-gray-600">
+          <p className="mt-3 text-muted-foreground">
             You must be logged in to access your profile.
           </p>
           <Link
             href="/login"
-            className="mt-5 inline-block rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white"
+            className="mt-5 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white"
           >
             Log in
           </Link>
@@ -29,8 +29,8 @@ export default async function ProfilePage() {
   return (
     <main className="mx-auto max-w-4xl space-y-6 px-6 py-10">
       <section className="space-y-2">
-        <h1 className="text-3xl font-bold">My profile</h1>
-        <p className="text-gray-600">
+        <h1 className="font-display text-3xl font-bold">My profile</h1>
+        <p className="text-muted-foreground">
           Manage your personal information, contact details, and profile photo.
         </p>
       </section>
@@ -41,8 +41,8 @@ export default async function ProfilePage() {
         <>
           <section className="space-y-4">
             <div className="space-y-1">
-              <h2 className="text-2xl font-bold">Support activity</h2>
-              <p className="text-gray-600">
+              <h2 className="font-display text-2xl font-bold">Support activity</h2>
+              <p className="text-muted-foreground">
                 A quick summary of what you funded and what your projects
                 received.
               </p>

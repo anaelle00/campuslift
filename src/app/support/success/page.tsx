@@ -26,9 +26,9 @@ export default async function SupportSuccessPage({
             Payment sent to Stripe
           </span>
 
-          <h1 className="text-3xl font-bold">Support in progress</h1>
+          <h1 className="font-display text-3xl font-bold">Support in progress</h1>
 
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Stripe confirmed your checkout. CampusLift is now finalizing the
             pledge and updating the project totals.
           </p>
@@ -41,14 +41,14 @@ export default async function SupportSuccessPage({
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href={projectId ? `/projects/${projectId}` : "/explore"}
-            className="rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90"
+            className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
           >
             Back to project
           </Link>
 
           <Link
             href="/dashboard"
-            className="rounded-lg border px-4 py-2 transition hover:bg-gray-50"
+            className="rounded-xl border border-border px-4 py-2 text-sm font-medium transition hover:bg-accent"
           >
             Open dashboard
           </Link>

@@ -13,26 +13,26 @@ export default async function Navbar() {
   const { user, avatarUrl, isAdmin } = await getNavbarData();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
-            <HandHeart className="h-5 w-5" />
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+            <HandHeart className="h-4.5 w-4.5" />
           </div>
 
           <div>
-            <p className="text-lg font-bold tracking-tight">CampusLift</p>
-            <p className="text-xs text-gray-500">Student project support</p>
+            <p className="font-display text-base font-bold tracking-tight">CampusLift</p>
+            <p className="text-xs text-muted-foreground">Student project support</p>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-black"
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
               >
                 {link.label}
               </Link>
@@ -41,7 +41,7 @@ export default async function Navbar() {
             {user ? (
               <Link
                 href="/dashboard"
-                className="rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-black"
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
               >
                 Dashboard
               </Link>
@@ -50,7 +50,7 @@ export default async function Navbar() {
             {isAdmin ? (
               <Link
                 href="/admin/moderation"
-                className="rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-black"
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
               >
                 Admin
               </Link>
@@ -65,7 +65,7 @@ export default async function Navbar() {
                   alt="Profile"
                   width={36}
                   height={36}
-                  className="h-9 w-9 rounded-full object-cover"
+                  className="h-9 w-9 rounded-full object-cover ring-2 ring-primary/20"
                 />
               </Link>
               <LogoutButton />
@@ -73,7 +73,7 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
             >
               Log in
             </Link>
