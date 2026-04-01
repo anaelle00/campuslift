@@ -1,115 +1,117 @@
 import Link from "next/link";
 import ProjectGrid from "@/components/projects/project-grid";
 import { getHomePageData } from "@/features/projects/queries";
+import { ArrowRight, Users, Lightbulb, TrendingUp, Star } from "lucide-react";
+
+const stats = [
+  { label: "Projects funded", value: "12", icon: Lightbulb },
+  { label: "Active supporters", value: "87", icon: Users },
+  { label: "Avg. pledge", value: "$8", icon: Star },
+  { label: "Clubs helped", value: "9", icon: TrendingUp },
+];
 
 export default async function HomePage() {
   const { user, featuredProjects, favoriteProjectIds, errorMessage } =
     await getHomePageData();
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10">
-      <section
-        className="grain relative grid gap-8 overflow-hidden rounded-3xl border p-8 md:grid-cols-2 md:items-center"
-        style={{
-          background: `
-            radial-gradient(ellipse 70% 60% at 10% 20%, oklch(0.82 0.10 285 / 0.18), transparent),
-            radial-gradient(ellipse 55% 70% at 90% 85%, oklch(0.88 0.07 60 / 0.16), transparent),
-            radial-gradient(ellipse 40% 40% at 60% 10%, oklch(0.85 0.08 285 / 0.10), transparent),
-            oklch(0.985 0.005 85)
-          `,
-        }}
-      >
-        <div className="relative z-10 space-y-5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-sm font-medium text-primary">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Community-powered student ideas
-          </span>
-
-          <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            Support student ideas,{" "}
-            <span className="text-primary">one pledge</span> at a time.
-          </h1>
-
-          <p className="max-w-xl text-lg text-muted-foreground">
-            CampusLift helps students showcase projects, raise small community
-            pledges, and bring meaningful campus ideas to life.
-          </p>
-
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/explore"
-              className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90"
-            >
-              Explore projects
-            </Link>
-
-            <Link
-              href="/create"
-              className="rounded-xl border border-primary/20 bg-white/60 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:bg-white"
-            >
-              Start a project
-            </Link>
-          </div>
-        </div>
-
+    <main className="mx-auto max-w-6xl px-6 pb-16">
+      {/* ── Hero ── */}
+      <section className="relative mt-6 overflow-hidden rounded-2xl bg-hero-bg px-8 py-16 md:px-14 md:py-20">
+        {/* Subtle glow blobs */}
         <div
-          className="relative z-10 rounded-3xl p-1"
-          style={{
-            background: `linear-gradient(135deg, oklch(0.75 0.15 285 / 0.3), oklch(0.88 0.07 60 / 0.2))`,
-          }}
-        >
-          <div className="space-y-4 rounded-[1.25rem] bg-white/90 p-5 shadow-sm backdrop-blur-sm">
-            <div className="flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold">This month</h2>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                +24 pledges
-              </span>
+          aria-hidden
+          className="pointer-events-none absolute -top-24 left-1/4 h-72 w-72 rounded-full opacity-20"
+          style={{ background: "radial-gradient(circle, oklch(0.55 0.24 264), transparent 70%)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-16 right-1/3 h-56 w-56 rounded-full opacity-10"
+          style={{ background: "radial-gradient(circle, oklch(0.70 0.18 220), transparent 70%)" }}
+        />
+
+        <div className="relative z-10 grid gap-12 md:grid-cols-2 md:items-center">
+          {/* Left – copy */}
+          <div className="space-y-6">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+              Community-powered
+            </span>
+
+            <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-hero-foreground md:text-5xl lg:text-[3.5rem]">
+              Support student ideas,{" "}
+              <span className="text-primary">one pledge</span>{" "}
+              at a time.
+            </h1>
+
+            <p className="max-w-md text-base leading-relaxed text-hero-muted">
+              CampusLift helps students showcase projects, raise small community
+              pledges, and bring meaningful campus ideas to life.
+            </p>
+
+            <div className="flex flex-wrap gap-3 pt-1">
+              <Link
+                href="/explore"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:opacity-90 hover:shadow-primary/30"
+              >
+                Explore projects
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-hero-foreground backdrop-blur-sm transition hover:bg-white/10"
+              >
+                Start a project
+              </Link>
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-primary/5 p-4">
-                <p className="text-sm text-muted-foreground">Projects funded</p>
-                <p className="mt-2 font-display text-2xl font-bold">12</p>
+          {/* Right – stats grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {stats.map(({ label, value, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex flex-col gap-3 rounded-xl border border-white/8 bg-white/4 p-5 backdrop-blur-sm"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="font-display text-3xl font-bold text-hero-foreground">
+                    {value}
+                  </p>
+                  <p className="mt-0.5 text-xs text-hero-muted">{label}</p>
+                </div>
               </div>
-
-              <div className="rounded-2xl bg-primary/5 p-4">
-                <p className="text-sm text-muted-foreground">Active supporters</p>
-                <p className="mt-2 font-display text-2xl font-bold">87</p>
-              </div>
-
-              <div className="rounded-2xl bg-primary/5 p-4">
-                <p className="text-sm text-muted-foreground">Avg. pledge</p>
-                <p className="mt-2 font-display text-2xl font-bold">$8</p>
-              </div>
-
-              <div className="rounded-2xl bg-primary/5 p-4">
-                <p className="text-sm text-muted-foreground">Student clubs helped</p>
-                <p className="mt-2 font-display text-2xl font-bold">9</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="mt-14 space-y-6">
-        <div className="flex items-center justify-between">
+      {/* ── Featured projects ── */}
+      <section className="mt-16 space-y-7">
+        <div className="flex items-end justify-between">
           <div>
-            <h2 className="font-display text-2xl font-bold">Featured projects</h2>
-            <p className="text-muted-foreground">
-              Discover initiatives currently looking for support.
+            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-primary">
+              Featured
             </p>
+            <h2 className="font-display text-2xl font-bold tracking-tight">
+              Projects looking for support
+            </h2>
           </div>
 
           <Link
             href="/explore"
-            className="rounded-full border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary transition hover:bg-primary/5"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition hover:border-primary/30 hover:text-primary"
           >
             View all
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
         {errorMessage ? (
-          <p className="text-red-500">Error loading featured projects.</p>
+          <p className="text-destructive">Error loading featured projects.</p>
         ) : (
           <ProjectGrid
             projects={featuredProjects}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HandHeart } from "lucide-react";
+import { Zap } from "lucide-react";
 import LogoutButton from "@/components/auth/logout-button";
 import { getNavbarData } from "@/features/auth/queries";
 
@@ -13,59 +13,59 @@ export default async function Navbar() {
   const { user, avatarUrl, isAdmin } = await getNavbarData();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <HandHeart className="h-4.5 w-4.5" />
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md shadow-primary/20 transition group-hover:shadow-primary/40">
+            <Zap className="h-4 w-4" strokeWidth={2.5} />
           </div>
-
-          <div>
-            <p className="font-display text-base font-bold tracking-tight">CampusLift</p>
-            <p className="text-xs text-muted-foreground">Student project support</p>
-          </div>
+          <span className="font-display text-[15px] font-bold tracking-tight">
+            CampusLift
+          </span>
         </Link>
 
-        <div className="flex items-center gap-3">
-          <nav className="flex items-center gap-1">
+        {/* Nav + Auth */}
+        <div className="flex items-center gap-1.5">
+          <nav className="flex items-center gap-0.5 mr-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 {link.label}
               </Link>
             ))}
 
-            {user ? (
+            {user && (
               <Link
                 href="/dashboard"
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Dashboard
               </Link>
-            ) : null}
+            )}
 
-            {isAdmin ? (
+            {isAdmin && (
               <Link
                 href="/admin/moderation"
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                className="rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Admin
               </Link>
-            ) : null}
+            )}
           </nav>
 
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <Link href="/profile">
                 <Image
                   src={avatarUrl || "/avatar-placeholder.png"}
                   alt="Profile"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 rounded-full object-cover ring-2 ring-primary/20"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full object-cover ring-2 ring-primary/25 transition hover:ring-primary/50"
                 />
               </Link>
               <LogoutButton />
@@ -73,7 +73,7 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition hover:opacity-90 hover:shadow-primary/30"
             >
               Log in
             </Link>
