@@ -8,17 +8,7 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <section
-        className="grain relative grid gap-8 overflow-hidden rounded-3xl border p-8 md:grid-cols-2 md:items-center"
-        style={{
-          background: `
-            radial-gradient(ellipse 70% 60% at 10% 20%, oklch(0.82 0.10 285 / 0.18), transparent),
-            radial-gradient(ellipse 55% 70% at 90% 85%, oklch(0.88 0.07 60 / 0.16), transparent),
-            radial-gradient(ellipse 40% 40% at 60% 10%, oklch(0.85 0.08 285 / 0.10), transparent),
-            oklch(0.985 0.005 85)
-          `,
-        }}
-      >
+      <section className="hero-gradient grain relative grid gap-8 overflow-hidden rounded-3xl border p-8 md:grid-cols-2 md:items-center">
         <div className="relative z-10 space-y-5">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-sm font-medium text-primary">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -45,7 +35,7 @@ export default async function HomePage() {
 
             <Link
               href="/create"
-              className="rounded-xl border border-primary/20 bg-white/60 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:bg-white"
+              className="rounded-xl border border-primary/20 bg-card/60 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:bg-card"
             >
               Start a project
             </Link>
@@ -58,7 +48,7 @@ export default async function HomePage() {
             background: `linear-gradient(135deg, oklch(0.75 0.15 285 / 0.3), oklch(0.88 0.07 60 / 0.2))`,
           }}
         >
-          <div className="space-y-4 rounded-[1.25rem] bg-white/90 p-5 shadow-sm backdrop-blur-sm">
+          <div className="space-y-4 rounded-[1.25rem] bg-card/90 p-5 shadow-sm backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg font-semibold">This month</h2>
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
