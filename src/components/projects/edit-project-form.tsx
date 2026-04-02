@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PROJECT_CATEGORIES } from "@/features/projects/schemas";
 import type { Project } from "@/types/project";
@@ -11,6 +11,7 @@ type Props = {
 
 export default function EditProjectForm({ project }: Props) {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState(project.title);
   const [shortDescription, setShortDescription] = useState(project.short_description);
@@ -173,16 +174,28 @@ export default function EditProjectForm({ project }: Props) {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="imageFile" className="text-sm font-medium">
+        <label className="text-sm font-medium">
           Project image{" "}
-          <span className="text-muted-foreground font-normal">(leave empty to keep current)</span>
+          <span className="font-normal text-muted-foreground">(leave empty to keep current)</span>
         </label>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="rounded-xl border px-4 py-2.5 text-sm font-medium transition hover:bg-accent"
+          >
+            Choose image
+          </button>
+          <span className="text-sm text-muted-foreground">
+            {imageFile ? imageFile.name : "No file chosen"}
+          </span>
+        </div>
         <input
-          id="imageFile"
+          ref={fileInputRef}
           type="file"
           accept="image/*"
+          className="hidden"
           onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-          className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary"
         />
       </div>
 

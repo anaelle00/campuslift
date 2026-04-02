@@ -1,10 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CreateProjectForm() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
@@ -191,19 +192,26 @@ export default function CreateProjectForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="imageFile" className="text-sm font-medium">
-          Project image
-        </label>
+        <label className="text-sm font-medium">Project image</label>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="rounded-xl border px-4 py-2.5 text-sm font-medium transition hover:bg-accent"
+          >
+            Choose image
+          </button>
+          <span className="text-sm text-muted-foreground">
+            {imageFile ? imageFile.name : "No file chosen"}
+          </span>
+        </div>
         <input
-          id="imageFile"
+          ref={fileInputRef}
           type="file"
           accept="image/*"
+          className="hidden"
           onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm"
         />
-        <p className="text-sm text-gray-500">
-          Upload an image for your project.
-        </p>
       </div>
 
       {errorMessage ? (
