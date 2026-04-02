@@ -30,10 +30,10 @@ export default function SupportHistoryList({
   items,
 }: Props) {
   return (
-    <section className="space-y-4 rounded-3xl border bg-white p-6 shadow-sm">
+    <section className="space-y-4 rounded-3xl border bg-card p-6 shadow-sm">
       <div className="space-y-1">
-        <h2 className="text-2xl font-bold">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+        <h2 className="font-display text-2xl font-bold">{title}</h2>
+        <p className="text-muted-foreground">{description}</p>
       </div>
 
       {items.length ? (
@@ -44,7 +44,7 @@ export default function SupportHistoryList({
               className="flex flex-col gap-4 rounded-2xl border p-4 sm:flex-row sm:items-start sm:justify-between"
             >
               <div className="space-y-1">
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-sm font-medium text-muted-foreground">
                   {dateFormatter.format(new Date(item.createdAt))}
                 </p>
 
@@ -55,7 +55,7 @@ export default function SupportHistoryList({
                   {item.projectTitle}
                 </Link>
 
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {counterpartyLabel}:{" "}
                   {item.counterpartyHref ? (
                     <Link href={item.counterpartyHref} className="hover:underline">
@@ -71,7 +71,7 @@ export default function SupportHistoryList({
                 <p className="text-xl font-bold">
                   {currencyFormatter.format(item.amount)}
                 </p>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium uppercase tracking-wide text-gray-600">
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary">
                   {item.source === "stripe" ? "Stripe" : "Legacy support"}
                 </span>
               </div>
@@ -81,7 +81,7 @@ export default function SupportHistoryList({
       ) : (
         <div className="rounded-2xl border border-dashed p-6 text-center">
           <h3 className="text-lg font-semibold">{emptyTitle}</h3>
-          <p className="mt-2 text-sm text-gray-600">{emptyDescription}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{emptyDescription}</p>
         </div>
       )}
     </section>

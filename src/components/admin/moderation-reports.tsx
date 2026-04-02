@@ -56,9 +56,9 @@ export default function ModerationReports({ reports }: Props) {
 
   if (!reports.length) {
     return (
-      <div className="rounded-2xl border border-dashed bg-white p-8 text-center">
+      <div className="rounded-2xl border border-dashed bg-card p-8 text-center">
         <h3 className="text-lg font-semibold">No reports in this queue</h3>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-muted-foreground">
           When users report comments, they will appear here for review.
         </p>
       </div>
@@ -72,11 +72,11 @@ export default function ModerationReports({ reports }: Props) {
       {reports.map((report) => (
         <article
           key={report.id}
-          className="space-y-4 rounded-3xl border bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-3xl border bg-card p-6 shadow-sm"
         >
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 <span className="rounded-full bg-amber-100 px-3 py-1 font-medium uppercase text-amber-700">
                   {report.reason}
                 </span>
@@ -89,7 +89,7 @@ export default function ModerationReports({ reports }: Props) {
                 </Link>
               </h2>
 
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Author:{" "}
                 {report.author.href ? (
                   <Link href={report.author.href} className="hover:underline">
@@ -114,7 +114,7 @@ export default function ModerationReports({ reports }: Props) {
                 type="button"
                 onClick={() => handleAction(report.id, "resolve")}
                 disabled={pendingKey === `${report.id}:resolve`}
-                className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-gray-100 disabled:opacity-60"
+                className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-accent disabled:opacity-60"
               >
                 {pendingKey === `${report.id}:resolve` ? "Saving..." : "Resolve"}
               </button>
@@ -123,7 +123,7 @@ export default function ModerationReports({ reports }: Props) {
                 type="button"
                 onClick={() => handleAction(report.id, "dismiss")}
                 disabled={pendingKey === `${report.id}:dismiss`}
-                className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-gray-100 disabled:opacity-60"
+                className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-accent disabled:opacity-60"
               >
                 {pendingKey === `${report.id}:dismiss` ? "Saving..." : "Dismiss"}
               </button>
@@ -141,22 +141,22 @@ export default function ModerationReports({ reports }: Props) {
             </div>
           </div>
 
-          <div className="space-y-3 rounded-2xl bg-gray-50 p-4">
+          <div className="space-y-3 rounded-2xl bg-muted/50 p-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Comment
               </p>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
+              <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
                 {report.comment.body}
               </p>
             </div>
 
             {report.details ? (
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Reporter details
                 </p>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
+                <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
                   {report.details}
                 </p>
               </div>

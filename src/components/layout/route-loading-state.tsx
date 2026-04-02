@@ -13,15 +13,15 @@ export default function RouteLoadingState({
     <PageContainer>
       <div className="space-y-6 py-4">
         <div className="space-y-3">
-          <div className="h-10 w-64 animate-pulse rounded-2xl bg-gray-200" />
-          <div className="h-5 w-full max-w-2xl animate-pulse rounded-xl bg-gray-200" />
+          <div className="h-10 w-64 animate-pulse rounded-2xl bg-muted" />
+          <div className="h-5 w-full max-w-2xl animate-pulse rounded-xl bg-muted" />
         </div>
 
-        <div className="rounded-3xl border bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border bg-card p-6 shadow-sm">
           <div className="space-y-3">
-            <div className="h-6 w-56 animate-pulse rounded-xl bg-gray-200" />
-            <div className="h-4 w-full animate-pulse rounded-xl bg-gray-100" />
-            <div className="h-4 w-5/6 animate-pulse rounded-xl bg-gray-100" />
+            <div className="h-6 w-56 animate-pulse rounded-xl bg-muted" />
+            <div className="h-4 w-full animate-pulse rounded-xl bg-muted/60" />
+            <div className="h-4 w-5/6 animate-pulse rounded-xl bg-muted/60" />
           </div>
         </div>
 
@@ -29,20 +29,20 @@ export default function RouteLoadingState({
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className="space-y-4 rounded-3xl border bg-white p-5 shadow-sm"
+              className="space-y-4 rounded-3xl border bg-card p-5 shadow-sm"
             >
-              <div className="h-44 animate-pulse rounded-2xl bg-gray-200" />
+              <div className="h-44 animate-pulse rounded-2xl bg-muted" />
               <div className="space-y-2">
-                <div className="h-5 w-3/4 animate-pulse rounded-xl bg-gray-200" />
-                <div className="h-4 w-full animate-pulse rounded-xl bg-gray-100" />
-                <div className="h-4 w-2/3 animate-pulse rounded-xl bg-gray-100" />
+                <div className="h-5 w-3/4 animate-pulse rounded-xl bg-muted" />
+                <div className="h-4 w-full animate-pulse rounded-xl bg-muted/60" />
+                <div className="h-4 w-2/3 animate-pulse rounded-xl bg-muted/60" />
               </div>
             </div>
           ))}
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 text-sm text-gray-500 shadow-sm">
-          <p className="font-semibold text-gray-700">{title}</p>
+        <div className="rounded-2xl border bg-card p-5 text-sm text-muted-foreground shadow-sm">
+          <p className="font-semibold text-foreground">{title}</p>
           <p className="mt-1">{description}</p>
         </div>
       </div>

@@ -108,9 +108,9 @@ export default function ProfileForm({ user, profile }: Props) {
   }
 
   return (
-    <div className="space-y-8 rounded-3xl border bg-white p-6 shadow-sm">
+    <div className="space-y-8 rounded-3xl border bg-card p-6 shadow-sm">
       <section className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-200">
+        <div className="h-24 w-24 overflow-hidden rounded-full bg-muted">
           {avatarPreview ? (
             avatarPreview.startsWith("blob:") ? (
               // A local object URL cannot be optimized by Next/Image.
@@ -133,14 +133,14 @@ export default function ProfileForm({ user, profile }: Props) {
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-700">Profile photo</p>
+          <p className="text-sm font-medium">Profile photo</p>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2"
+            className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"
           />
-          <p className="text-xs text-gray-500">{user.email}</p>
+          <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
       </section>
 
@@ -151,7 +151,7 @@ export default function ProfileForm({ user, profile }: Props) {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Display name"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -161,7 +161,7 @@ export default function ProfileForm({ user, profile }: Props) {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </section>
@@ -173,7 +173,7 @@ export default function ProfileForm({ user, profile }: Props) {
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
             placeholder="Organization"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -183,7 +183,7 @@ export default function ProfileForm({ user, profile }: Props) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Phone"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </section>
@@ -194,7 +194,7 @@ export default function ProfileForm({ user, profile }: Props) {
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
           placeholder="Website"
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </section>
 
@@ -205,7 +205,7 @@ export default function ProfileForm({ user, profile }: Props) {
           onChange={(e) => setBio(e.target.value)}
           placeholder="Tell people a bit about yourself"
           rows={5}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </section>
 
@@ -220,7 +220,7 @@ export default function ProfileForm({ user, profile }: Props) {
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSaving ? "Saving..." : "Save profile"}
         </button>
@@ -228,7 +228,7 @@ export default function ProfileForm({ user, profile }: Props) {
         <button
           type="button"
           onClick={handleLogout}
-          className="rounded-xl border px-5 py-3 text-sm font-semibold transition hover:bg-gray-100"
+          className="rounded-xl border px-5 py-3 text-sm font-semibold transition hover:bg-accent"
         >
           Log out
         </button>

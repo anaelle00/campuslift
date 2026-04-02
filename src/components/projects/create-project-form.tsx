@@ -82,7 +82,7 @@ export default function CreateProjectForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 rounded-3xl border bg-white p-6 shadow-sm"
+      className="space-y-6 rounded-3xl border bg-card p-6 shadow-sm"
     >
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium">
@@ -94,7 +94,7 @@ export default function CreateProjectForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Ex: 3D printed prototype for robotics demo"
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
@@ -108,7 +108,7 @@ export default function CreateProjectForm() {
           value={shortDescription}
           onChange={(e) => setShortDescription(e.target.value)}
           placeholder="A short one-line summary of your project"
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
@@ -122,7 +122,7 @@ export default function CreateProjectForm() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Explain your project, why it matters, and what the funding will support."
           rows={6}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
@@ -135,7 +135,7 @@ export default function CreateProjectForm() {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           >
             <option>Tech</option>
             <option>Association</option>
@@ -156,7 +156,7 @@ export default function CreateProjectForm() {
             value={ownerName}
             onChange={(e) => setOwnerName(e.target.value)}
             placeholder="Ex: Anaelle"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
@@ -173,7 +173,7 @@ export default function CreateProjectForm() {
             value={targetAmount}
             onChange={(e) => setTargetAmount(e.target.value)}
             placeholder="150"
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -186,7 +186,7 @@ export default function CreateProjectForm() {
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
@@ -222,7 +222,7 @@ export default function CreateProjectForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "Publishing..." : "Publish project"}
         </button>

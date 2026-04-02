@@ -239,9 +239,9 @@ export default function CommentsSection({
     return (
       <li
         key={comment.id}
-        className={depth > 0 ? "mt-4 border-l border-gray-200 pl-4" : ""}
+        className={depth > 0 ? "mt-4 border-l border-border pl-4" : ""}
       >
-        <div className="rounded-2xl border bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border bg-card p-4 shadow-sm">
           <div className="flex items-start gap-3">
             <Avatar className="size-10 border-none after:hidden">
               {comment.author.avatarUrl ? (
@@ -268,19 +268,19 @@ export default function CommentsSection({
                   <span className="font-semibold">{comment.author.displayName}</span>
                 )}
 
-                <span className="text-gray-400">@{comment.author.username ?? "user"}</span>
-                <span className="text-gray-400">|</span>
-                <span className="text-gray-500">
+                <span className="text-muted-foreground">@{comment.author.username ?? "user"}</span>
+                <span className="text-muted-foreground">|</span>
+                <span className="text-muted-foreground">
                   {dateFormatter.format(new Date(comment.createdAt))}
                 </span>
               </div>
 
               {deleted ? (
-                <p className="text-sm italic text-gray-400">
+                <p className="text-sm italic text-muted-foreground">
                   This comment was deleted.
                 </p>
               ) : (
-                <p className="whitespace-pre-wrap text-sm text-gray-700">
+                <p className="whitespace-pre-wrap text-sm text-foreground">
                   {comment.body}
                 </p>
               )}
@@ -294,7 +294,7 @@ export default function CommentsSection({
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
                         comment.reactions.userReaction === "like"
                           ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                          : "hover:bg-gray-100"
+                          : "hover:bg-accent"
                       }`}
                     >
                       Like ({comment.reactions.likes})
@@ -306,7 +306,7 @@ export default function CommentsSection({
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
                         comment.reactions.userReaction === "dislike"
                           ? "border-rose-200 bg-rose-50 text-rose-700"
-                          : "hover:bg-gray-100"
+                          : "hover:bg-accent"
                       }`}
                     >
                       Dislike ({comment.reactions.dislikes})
@@ -324,7 +324,7 @@ export default function CommentsSection({
                       setReplyBody("");
                       setErrorMessage("");
                     }}
-                    className="font-medium text-gray-600 transition hover:text-black"
+                    className="font-medium text-muted-foreground transition hover:text-foreground"
                   >
                     {replyTargetId === comment.id ? "Cancel reply" : "Reply"}
                   </button>
@@ -366,21 +366,21 @@ export default function CommentsSection({
               {replyTargetId === comment.id ? (
                 <form
                   onSubmit={(event) => handleReplySubmit(event, comment.id)}
-                  className="space-y-3 rounded-2xl border bg-gray-50 p-4"
+                  className="space-y-3 rounded-2xl border bg-muted/50 p-4"
                 >
                   <textarea
                     value={replyBody}
                     onChange={(event) => setReplyBody(event.target.value)}
                     rows={3}
                     placeholder="Write your reply..."
-                    className="w-full rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-black"
+                    className="w-full rounded-xl border bg-background px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
 
                   <div className="flex flex-wrap gap-3">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isSubmitting ? "Posting..." : "Post reply"}
                     </button>
@@ -391,7 +391,7 @@ export default function CommentsSection({
                         setReplyTargetId(null);
                         setReplyBody("");
                       }}
-                      className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-gray-100"
+                      className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-accent"
                     >
                       Cancel
                     </button>
@@ -411,7 +411,7 @@ export default function CommentsSection({
                       onChange={(event) =>
                         setReportReason(event.target.value as ReportReason)
                       }
-                      className="w-full rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-black"
+                      className="w-full rounded-xl border bg-background px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                     >
                       <option value="spam">Spam</option>
                       <option value="harassment">Harassment</option>
@@ -430,7 +430,7 @@ export default function CommentsSection({
                       onChange={(event) => setReportDetails(event.target.value)}
                       rows={3}
                       placeholder="Add a short context for the moderator..."
-                      className="w-full rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-black"
+                      className="w-full rounded-xl border bg-background px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                     />
                   </div>
 
@@ -471,18 +471,18 @@ export default function CommentsSection({
   }
 
   return (
-    <section id="comments" className="space-y-6 rounded-2xl border bg-white p-5">
+    <section id="comments" className="space-y-6 rounded-2xl border bg-card p-5">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-semibold">Discussion</h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {commentsPageData.totalCount} comments across this project thread.
             </p>
           </div>
 
           {commentsPageData.totalPages > 1 ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               Page {commentsPageData.currentPage} of {commentsPageData.totalPages}
             </p>
           ) : null}
@@ -502,7 +502,7 @@ export default function CommentsSection({
             isLoggedIn ? "Write a comment..." : "Log in to join the discussion."
           }
           disabled={!isLoggedIn || isSubmitting}
-          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black disabled:bg-gray-100"
+          className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -510,20 +510,20 @@ export default function CommentsSection({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Posting..." : "Post comment"}
             </button>
           ) : (
             <Link
               href="/login"
-              className="rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
             >
               Log in to comment
             </Link>
           )}
 
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Nested replies are supported in this thread.
           </p>
         </div>
@@ -556,7 +556,7 @@ export default function CommentsSection({
             className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${
               commentsPageData.currentPage === 1
                 ? "pointer-events-none opacity-50"
-                : "hover:bg-gray-100"
+                : "hover:bg-accent"
             }`}
           >
             Previous page
@@ -574,7 +574,7 @@ export default function CommentsSection({
             className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${
               commentsPageData.currentPage === commentsPageData.totalPages
                 ? "pointer-events-none opacity-50"
-                : "hover:bg-gray-100"
+                : "hover:bg-accent"
             }`}
           >
             Next page

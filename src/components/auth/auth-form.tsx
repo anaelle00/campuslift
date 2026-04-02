@@ -92,12 +92,12 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="rounded-3xl border bg-white p-6 shadow-sm">
+    <div className="rounded-3xl border bg-card p-6 shadow-sm">
       <div className="mb-6 space-y-2">
         <h2 className="text-2xl font-bold">
           {mode === "login" ? "Log in" : "Create an account"}
         </h2>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {mode === "login"
             ? "Access your projects and dashboard."
             : "Create your account and set up your public profile."}
@@ -114,7 +114,7 @@ export default function AuthForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             placeholder="you@example.com"
           />
         </div>
@@ -128,7 +128,7 @@ export default function AuthForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+            className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             placeholder="password123"
           />
         </div>
@@ -145,7 +145,7 @@ export default function AuthForm() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="anaellemathe"
                 />
               </div>
@@ -159,7 +159,7 @@ export default function AuthForm() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="Anaelle Mathe"
                 />
               </div>
@@ -174,7 +174,7 @@ export default function AuthForm() {
                 type="text"
                 value={organization}
                 onChange={(e) => setOrganization(e.target.value)}
-                className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 placeholder="Optional"
               />
             </div>
@@ -189,7 +189,7 @@ export default function AuthForm() {
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="Optional"
                 />
               </div>
@@ -203,7 +203,7 @@ export default function AuthForm() {
                   type="text"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                  className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="Optional"
                 />
               </div>
@@ -218,7 +218,7 @@ export default function AuthForm() {
                 rows={4}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-black"
+                className="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 placeholder="Tell people a little about yourself or your project."
               />
             </div>
@@ -234,7 +234,7 @@ export default function AuthForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting
             ? "Please wait..."
@@ -244,7 +244,7 @@ export default function AuthForm() {
         </button>
       </form>
 
-      <div className="mt-5 text-center text-sm text-gray-600">
+      <div className="mt-5 text-center text-sm text-muted-foreground">
         {mode === "login" ? "No account yet?" : "Already have an account?"}{" "}
         <button
           type="button"
@@ -253,7 +253,7 @@ export default function AuthForm() {
             setErrorMessage("");
             setInfoMessage("");
           }}
-          className="font-semibold text-black underline underline-offset-2"
+          className="font-semibold text-primary underline underline-offset-2"
         >
           {mode === "login" ? "Sign up" : "Log in"}
         </button>

@@ -82,7 +82,7 @@ export default function SupportProjectForm({ projectId, isLoggedIn }: Props) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Enter amount"
-          className="w-40 rounded-lg border px-3 py-2"
+          className="w-40 rounded-xl border px-3 py-2 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
         {errorMessage ? (
           <p className="mt-2 text-xs text-red-500">{errorMessage}</p>
@@ -92,7 +92,7 @@ export default function SupportProjectForm({ projectId, isLoggedIn }: Props) {
       <button
         type="submit"
         disabled={isRedirecting}
-        className="rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        className="rounded-xl bg-primary px-4 py-2 text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isRedirecting ? "Redirecting..." : "Support this project"}
       </button>
