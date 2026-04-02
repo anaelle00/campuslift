@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -12,6 +13,43 @@ type PageProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ commentsPage?: string | string[] }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const { project } = await getProjectDetailsPageData(id);
+
+  if (!project) {
+    return { title: "Project not found" };
+  }
+
+  const percentage = Math.min(
+    Math.round((project.current_amount / project.target_amount) * 100),
+    100,
+  );
+
+  return {
+    title: project.title,
+    description: `${project.short_description} — ${percentage}% funded · Goal: $${project.target_amount}`,
+    openGraph: {
+      title: project.title,
+      description: `${project.short_description} — ${percentage}% funded · Goal: $${project.target_amount}`,
+      images: [
+        {
+          url: project.image_url,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: `${project.short_description} — ${percentage}% funded`,
+      images: [project.image_url],
+    },
+  };
+}
 
 function getSearchParam(value?: string | string[]) {
   return Array.isArray(value) ? value[0] : value;

@@ -17,9 +17,23 @@ const inter = Inter({
   display: "swap",
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://campuslift.vercel.app";
+
 export const metadata: Metadata = {
-  title: "CampusLift",
-  description: "Student micro-funding platform",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "CampusLift",
+    template: "%s — CampusLift",
+  },
+  description: "Support student projects and bring campus ideas to life.",
+  openGraph: {
+    siteName: "CampusLift",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
