@@ -117,7 +117,7 @@ export default async function DashboardPage() {
         </div>
 
         {myProjectsError ? (
-          <div className="rounded-2xl border bg-white p-6 text-red-500 shadow-sm">
+          <div className="rounded-2xl border bg-card p-6 text-red-500 shadow-sm">
             Error loading your projects: {myProjectsError}
           </div>
         ) : myProjects.length > 0 ? (
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
             isLoggedIn={true}
           />
         ) : (
-          <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
+          <div className="rounded-2xl border bg-card p-8 text-center shadow-sm">
             <h3 className="text-lg font-semibold">No projects yet</h3>
             <p className="mt-2 text-muted-foreground">
               You have not created any projects yet.
@@ -151,7 +151,7 @@ export default async function DashboardPage() {
         </div>
 
         {favoritesError ? (
-          <div className="rounded-2xl border bg-white p-6 text-red-500 shadow-sm">
+          <div className="rounded-2xl border bg-card p-6 text-red-500 shadow-sm">
             Error loading favorites: {favoritesError}
           </div>
         ) : savedProjects.length > 0 ? (
@@ -161,7 +161,7 @@ export default async function DashboardPage() {
             isLoggedIn={true}
           />
         ) : (
-          <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
+          <div className="rounded-2xl border bg-card p-8 text-center shadow-sm">
             <h3 className="text-lg font-semibold">No saved projects yet</h3>
             <p className="mt-2 text-muted-foreground">
               Explore projects and click the heart icon to save the ones you
