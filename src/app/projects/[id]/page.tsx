@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CommentsSection from "@/components/comments/comments-section";
 import FavoriteButton from "@/components/projects/favorite-button";
-import ProjectProgress from "@/components/projects/project-progress";
+import RealtimeFunding from "@/components/projects/realtime-funding";
 import SupportProjectForm from "@/components/projects/support-project-form";
 import { getProjectCommentsPageData } from "@/features/comments/queries";
 import { getProjectDetailsPageData } from "@/features/projects/queries";
@@ -90,14 +90,14 @@ export default async function ProjectDetailsPage({
       <div className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
         <h2 className="font-display text-xl font-semibold">Funding Progress</h2>
 
-        <ProjectProgress
-          current={project.current_amount}
-          target={project.target_amount}
+        <RealtimeFunding
+          projectId={project.id}
+          initialAmount={project.current_amount}
+          initialSupporters={project.supporters_count}
+          targetAmount={project.target_amount}
         />
 
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <span>{project.supporters_count} supporters</span>
-          <span className="h-1 w-1 rounded-full bg-border" />
           <span>{commentsPageData.totalCount} comments</span>
         </div>
 

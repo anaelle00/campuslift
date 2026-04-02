@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HandHeart } from "lucide-react";
 import LogoutButton from "@/components/auth/logout-button";
+import ThemeToggle from "@/components/layout/theme-toggle";
 import { getNavbarData } from "@/features/auth/queries";
 
 const navLinks = [
@@ -56,6 +57,8 @@ export default async function Navbar() {
               </Link>
             ) : null}
           </nav>
+
+          <ThemeToggle />
 
           {user ? (
             <div className="flex items-center gap-3">
