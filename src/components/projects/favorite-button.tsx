@@ -69,7 +69,7 @@ export default function FavoriteButton({
         type="button"
         onClick={handleToggleFavorite}
         disabled={isLoading}
-        className="inline-flex items-center justify-center rounded-full border bg-white/90 p-2 shadow-sm transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center justify-center rounded-full border bg-card/90 p-2 shadow-sm transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         title={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >

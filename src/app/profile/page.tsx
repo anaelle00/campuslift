@@ -10,7 +10,7 @@ export default async function ProfilePage() {
   if (!user) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-10">
-        <div className="rounded-2xl border bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border bg-card p-8 shadow-sm">
           <h1 className="text-3xl font-bold">Profile</h1>
           <p className="mt-3 text-muted-foreground">
             You must be logged in to access your profile.

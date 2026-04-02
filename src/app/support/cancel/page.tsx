@@ -16,7 +16,7 @@ export default async function SupportCancelPage({ searchParams }: CancelPageProp
 
   return (
     <main className="mx-auto max-w-2xl space-y-6 p-6">
-      <div className="rounded-3xl border bg-white p-8 shadow-sm">
+      <div className="rounded-3xl border bg-card p-8 shadow-sm">
         <div className="space-y-3">
           <span className="inline-flex rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
             Checkout canceled

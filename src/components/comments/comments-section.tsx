@@ -450,7 +450,7 @@ export default function CommentsSection({
                         setReportReason("spam");
                         setReportDetails("");
                       }}
-                      className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-white"
+                      className="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-accent"
                     >
                       Cancel
                     </button>
