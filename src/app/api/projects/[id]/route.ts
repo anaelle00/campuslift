@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
 import { updateProject } from "@/features/projects/actions";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, { params }: Params) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "projects:update",
+    max: 10,
+    windowMs: 10 * 60 * 1000,
+    message: "Too many project update attempts. Please wait before trying again.",
+  });
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const { id } = await params;
   const formData = await request.formData();
   const result = await updateProject(id, formData);
