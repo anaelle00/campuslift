@@ -6,6 +6,7 @@ import type { ProjectStatus } from "@/types/project";
 
 type Props = {
   projectId: string;
+  projectTitle: string;
   currentStatus: ProjectStatus;
 };
 
@@ -21,9 +22,11 @@ const STATUS_STYLES: Record<ProjectStatus, string> = {
   archived: "border-border bg-muted text-muted-foreground",
 };
 
-export default function ProjectStatusButton({ projectId, currentStatus }: Props) {
+export default function ProjectStatusButton({ projectId, projectTitle, currentStatus }: Props) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleStatusChange(newStatus: ProjectStatus) {
     setIsLoading(true);
@@ -39,8 +42,46 @@ export default function ProjectStatusButton({ projectId, currentStatus }: Props)
     }
   }
 
+  async function handleDelete() {
+    setIsDeleting(true);
+    try {
+      await fetch(`/api/projects/${projectId}`, { method: "DELETE" });
+      router.refresh();
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }
+
+  if (showDeleteConfirm) {
+    return (
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">
+          Delete <span className="font-semibold text-foreground">&ldquo;{projectTitle}&rdquo;</span>? This cannot be undone.
+        </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            disabled={isDeleting}
+            onClick={handleDelete}
+            className="rounded-lg bg-destructive px-2.5 py-0.5 text-xs font-medium text-white transition hover:opacity-90 disabled:opacity-60"
+          >
+            {isDeleting ? "Deleting..." : "Confirm"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(false)}
+            className="rounded-lg border px-2.5 py-0.5 text-xs font-medium transition hover:bg-accent"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <span
         className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[currentStatus]}`}
       >
@@ -79,6 +120,14 @@ export default function ProjectStatusButton({ projectId, currentStatus }: Props)
           Republish
         </button>
       )}
+
+      <button
+        type="button"
+        onClick={() => setShowDeleteConfirm(true)}
+        className="rounded-lg border border-destructive/30 px-2.5 py-0.5 text-xs font-medium text-destructive transition hover:bg-destructive/5"
+      >
+        Delete
+      </button>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CommentsSection from "@/components/comments/comments-section";
+import DeleteProjectButton from "@/components/projects/delete-project-button";
 import FavoriteButton from "@/components/projects/favorite-button";
 import RealtimeFunding from "@/components/projects/realtime-funding";
 import SupportProjectForm from "@/components/projects/support-project-form";
@@ -98,12 +99,18 @@ export default async function ProjectDetailsPage({
           </span>
 
           {user?.id === project.owner_id && (
-            <Link
-              href={`/projects/${project.id}/edit`}
-              className="rounded-xl border px-4 py-2 text-sm font-medium transition hover:bg-accent"
-            >
-              Edit project
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/projects/${project.id}/edit`}
+                className="rounded-xl border px-4 py-2 text-sm font-medium transition hover:bg-accent"
+              >
+                Edit project
+              </Link>
+              <DeleteProjectButton
+                projectId={project.id}
+                projectTitle={project.title}
+              />
+            </div>
           )}
         </div>
 

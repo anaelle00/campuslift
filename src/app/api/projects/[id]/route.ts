@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { updateProject, updateProjectStatus } from "@/features/projects/actions";
+import { deleteProject, updateProject, updateProjectStatus } from "@/features/projects/actions";
 import { enforceRateLimit } from "@/lib/rate-limit";
 import type { ProjectStatus } from "@/types/project";
 
@@ -41,6 +41,26 @@ export async function PUT(request: Request, { params }: Params) {
   const { id } = await params;
   const body = (await request.json()) as { status?: string };
   const result = await updateProjectStatus(id, body.status as ProjectStatus);
+
+  return NextResponse.json(result, {
+    status: result.success ? 200 : (result.status ?? 400),
+  });
+}
+
+export async function DELETE(request: Request, { params }: Params) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "projects:delete",
+    max: 5,
+    windowMs: 10 * 60 * 1000,
+    message: "Too many delete attempts. Please wait before trying again.",
+  });
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
+  const { id } = await params;
+  const result = await deleteProject(id);
 
   return NextResponse.json(result, {
     status: result.success ? 200 : (result.status ?? 400),

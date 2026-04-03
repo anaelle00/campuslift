@@ -90,6 +90,7 @@ export default function ProjectCard({
           <div className="border-t pt-3">
             <ProjectStatusButton
               projectId={project.id}
+              projectTitle={project.title}
               currentStatus={project.status}
             />
           </div>

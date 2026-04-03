@@ -209,6 +209,50 @@ export async function updateProject(
   );
 }
 
+export async function deleteProject(
+  projectId: string,
+): Promise<ActionResult<null>> {
+  if (!projectId.trim()) {
+    return actionFailure("Project id is required.");
+  }
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return actionFailure("You must be logged in.", 401);
+  }
+
+  const { data: existing, error: existingError } = await supabase
+    .from("projects")
+    .select("id, owner_id")
+    .eq("id", projectId)
+    .single();
+
+  if (existingError || !existing) {
+    return actionFailure("Project not found.", 404);
+  }
+
+  if (existing.owner_id !== user.id) {
+    return actionFailure("You don't have permission to delete this project.", 403);
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", projectId);
+
+  if (error) {
+    return actionFailure(error.message);
+  }
+
+  return actionSuccess(null);
+}
+
 export async function updateProjectStatus(
   projectId: string,
   status: ProjectStatus,
