@@ -125,6 +125,7 @@ export default async function DashboardPage() {
             projects={myProjects}
             favoriteProjectIds={favoriteProjectIds}
             isLoggedIn={true}
+            showStatusControl={true}
           />
         ) : (
           <div className="rounded-2xl border bg-card p-8 text-center shadow-sm">

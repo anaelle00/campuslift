@@ -199,6 +199,7 @@ export type Database = {
           owner_name: string;
           owner_username: string;
           short_description: string;
+          status: "draft" | "published" | "archived";
           supporters_count: number;
           target_amount: number;
           title: string;
@@ -215,6 +216,7 @@ export type Database = {
           owner_name: string;
           owner_username: string;
           short_description: string;
+          status?: "draft" | "published" | "archived";
           supporters_count?: number;
           target_amount: number;
           title: string;
@@ -231,6 +233,7 @@ export type Database = {
           owner_name?: string;
           owner_username?: string;
           short_description?: string;
+          status?: "draft" | "published" | "archived";
           supporters_count?: number;
           target_amount?: number;
           title?: string;

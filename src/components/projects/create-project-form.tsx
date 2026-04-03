@@ -16,6 +16,7 @@ export default function CreateProjectForm() {
   const [deadline, setDeadline] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"draft" | "published">("published");
   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -46,6 +47,7 @@ export default function CreateProjectForm() {
       formData.append("ownerName", ownerName.trim());
       formData.append("targetAmount", targetAmount.trim());
       formData.append("deadline", deadline.trim());
+      formData.append("status", submitStatus);
 
       if (imageFile) {
         formData.append("imageFile", imageFile);
@@ -222,9 +224,18 @@ export default function CreateProjectForm() {
         <button
           type="submit"
           disabled={isSubmitting}
+          onClick={() => setSubmitStatus("draft")}
+          className="rounded-xl border px-5 py-3 text-sm font-semibold transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isSubmitting && submitStatus === "draft" ? "Saving..." : "Save as draft"}
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          onClick={() => setSubmitStatus("published")}
           className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Publishing..." : "Publish project"}
+          {isSubmitting && submitStatus === "published" ? "Publishing..." : "Publish project"}
         </button>
       </div>
     </form>

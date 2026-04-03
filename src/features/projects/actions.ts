@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { actionFailure, actionSuccess, type ActionResult } from "@/features/shared/result";
 import { type CreateProjectInput, validateCreateProjectInput } from "@/features/projects/schemas";
+import type { ProjectStatus } from "@/types/project";
 
 const DEFAULT_PROJECT_IMAGE_URL =
   "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop";
@@ -84,6 +85,10 @@ export async function createProject(
     finalImageUrl = publicUrlData.publicUrl;
   }
 
+  const rawStatus = String(formData.get("status") ?? "published");
+  const status: ProjectStatus =
+    rawStatus === "draft" || rawStatus === "archived" ? rawStatus : "published";
+
   const { error } = await supabase.from("projects").insert({
     title: input.title.trim(),
     short_description: input.shortDescription.trim(),
@@ -97,13 +102,15 @@ export async function createProject(
     image_url: finalImageUrl,
     deadline: input.deadline,
     supporters_count: 0,
+    status,
   });
 
   if (error) {
     return actionFailure(error.message);
   }
 
-  return actionSuccess({ redirectTo: "/explore" }, "Project created successfully.");
+  const redirectTo = status === "draft" ? "/dashboard" : "/explore";
+  return actionSuccess({ redirectTo }, "Project created successfully.");
 }
 
 export async function updateProject(
@@ -200,6 +207,56 @@ export async function updateProject(
     { redirectTo: `/projects/${projectId}` },
     "Project updated successfully.",
   );
+}
+
+export async function updateProjectStatus(
+  projectId: string,
+  status: ProjectStatus,
+): Promise<ActionResult<null>> {
+  if (!projectId.trim()) {
+    return actionFailure("Project id is required.");
+  }
+
+  const validStatuses: ProjectStatus[] = ["draft", "published", "archived"];
+  if (!validStatuses.includes(status)) {
+    return actionFailure("Invalid status.");
+  }
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return actionFailure("You must be logged in.", 401);
+  }
+
+  const { data: existing, error: existingError } = await supabase
+    .from("projects")
+    .select("id, owner_id")
+    .eq("id", projectId)
+    .single();
+
+  if (existingError || !existing) {
+    return actionFailure("Project not found.", 404);
+  }
+
+  if (existing.owner_id !== user.id) {
+    return actionFailure("You don't have permission to update this project.", 403);
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .update({ status })
+    .eq("id", projectId);
+
+  if (error) {
+    return actionFailure(error.message);
+  }
+
+  return actionSuccess(null);
 }
 
 export async function toggleFavorite(

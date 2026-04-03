@@ -6,6 +6,8 @@ export type ProjectCategory =
   | "Social"
   | "Education";
 
+export type ProjectStatus = "draft" | "published" | "archived";
+
 export type Project = {
   id: string;
   owner_id: string;
@@ -20,6 +22,7 @@ export type Project = {
   image_url: string;
   deadline: string;
   supporters_count: number;
+  status: ProjectStatus;
   comments_count?: number;
   created_at?: string;
 };

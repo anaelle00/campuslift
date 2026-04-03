@@ -3,11 +3,13 @@ import Link from "next/link";
 import { Project } from "@/types/project";
 import ProjectProgress from "./project-progress";
 import FavoriteButton from "./favorite-button";
+import ProjectStatusButton from "./project-status-button";
 
 type Props = {
   project: Project;
   isFavorite?: boolean;
   isLoggedIn?: boolean;
+  showStatusControl?: boolean;
 };
 
 const categoryStyles: Record<string, string> = {
@@ -23,6 +25,7 @@ export default function ProjectCard({
   project,
   isFavorite = false,
   isLoggedIn = false,
+  showStatusControl = false,
 }: Props) {
   const badgeStyle = categoryStyles[project.category] ?? "bg-muted text-muted-foreground border-border";
 
@@ -82,6 +85,15 @@ export default function ProjectCard({
           <span className="h-1 w-1 rounded-full bg-border" />
           <span>{project.comments_count ?? 0} comments</span>
         </div>
+
+        {showStatusControl && (
+          <div className="border-t pt-3">
+            <ProjectStatusButton
+              projectId={project.id}
+              currentStatus={project.status}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

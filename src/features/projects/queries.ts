@@ -44,6 +44,7 @@ export async function getHomePageData() {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
+    .eq("status", "published")
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -72,7 +73,8 @@ export async function getExplorePageData(input: {
 
   let countQuery = supabase
     .from("projects")
-    .select("id", { count: "exact", head: true });
+    .select("id", { count: "exact", head: true })
+    .eq("status", "published");
 
   if (input.category !== DEFAULT_EXPLORE_CATEGORY) {
     countQuery = countQuery.eq("category", input.category);
@@ -92,7 +94,7 @@ export async function getExplorePageData(input: {
   const from = (currentPage - 1) * EXPLORE_PAGE_SIZE;
   const to = from + EXPLORE_PAGE_SIZE - 1;
 
-  let projectsQuery = supabase.from("projects").select("*");
+  let projectsQuery = supabase.from("projects").select("*").eq("status", "published");
 
   if (input.category !== DEFAULT_EXPLORE_CATEGORY) {
     projectsQuery = projectsQuery.eq("category", input.category);
