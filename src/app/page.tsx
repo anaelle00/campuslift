@@ -1,10 +1,11 @@
 import Link from "next/link";
 import ProjectGrid from "@/components/projects/project-grid";
+import { getHeroStats } from "@/features/donations/hero-stats";
 import { getHomePageData } from "@/features/projects/queries";
 
 export default async function HomePage() {
-  const { user, featuredProjects, favoriteProjectIds, errorMessage } =
-    await getHomePageData();
+  const [{ user, featuredProjects, favoriteProjectIds, errorMessage }, heroStats] =
+    await Promise.all([getHomePageData(), getHeroStats()]);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
@@ -51,30 +52,40 @@ export default async function HomePage() {
           <div className="space-y-4 rounded-[1.25rem] bg-card/90 p-5 shadow-sm backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg font-semibold">This month</h2>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                +24 pledges
-              </span>
+              {heroStats.recentPledgesCount > 0 && (
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                  +{heroStats.recentPledgesCount} pledges
+                </span>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-primary/5 p-4">
                 <p className="text-sm text-muted-foreground">Projects funded</p>
-                <p className="mt-2 font-display text-2xl font-bold">12</p>
+                <p className="mt-2 font-display text-2xl font-bold">
+                  {heroStats.projectsFunded}
+                </p>
               </div>
 
               <div className="rounded-2xl bg-primary/5 p-4">
                 <p className="text-sm text-muted-foreground">Active supporters</p>
-                <p className="mt-2 font-display text-2xl font-bold">87</p>
+                <p className="mt-2 font-display text-2xl font-bold">
+                  {heroStats.activeSupporters}
+                </p>
               </div>
 
               <div className="rounded-2xl bg-primary/5 p-4">
                 <p className="text-sm text-muted-foreground">Avg. pledge</p>
-                <p className="mt-2 font-display text-2xl font-bold">$8</p>
+                <p className="mt-2 font-display text-2xl font-bold">
+                  ${heroStats.averagePledge}
+                </p>
               </div>
 
               <div className="rounded-2xl bg-primary/5 p-4">
-                <p className="text-sm text-muted-foreground">Student clubs helped</p>
-                <p className="mt-2 font-display text-2xl font-bold">9</p>
+                <p className="text-sm text-muted-foreground">Total pledges</p>
+                <p className="mt-2 font-display text-2xl font-bold">
+                  {heroStats.recentPledgesCount}
+                </p>
               </div>
             </div>
           </div>
