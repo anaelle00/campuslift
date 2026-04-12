@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
 import ThemeProvider from "@/components/layout/theme-provider";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -43,10 +44,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jakarta.variable} ${inter.variable} min-h-screen antialiased`}>
+      <body className={`${jakarta.variable} ${inter.variable} flex min-h-screen flex-col antialiased`}>
         <ThemeProvider>
           <Navbar />
-          {children}
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

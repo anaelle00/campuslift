@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { actionFailure, actionSuccess, type ActionResult } from "@/features/shared/result";
+import { createNotification } from "@/features/notifications/actions";
 import {
   type CommentReportReason,
   validateCommentBody,
@@ -38,7 +40,7 @@ export async function createComment(
 
   const { data: project, error: projectError } = await supabase
     .from("projects")
-    .select("id")
+    .select("id, title, owner_id")
     .eq("id", projectId)
     .single();
 
@@ -68,6 +70,26 @@ export async function createComment(
 
   if (error) {
     return actionFailure(error.message);
+  }
+
+  // Notify the project owner (skip if commenter is the owner)
+  if (project.owner_id && project.owner_id !== user.id) {
+    const adminSupabase = createAdminClient();
+    const { data: commenterProfile } = await adminSupabase
+      .from("profiles")
+      .select("display_name, username")
+      .eq("id", user.id)
+      .single();
+
+    const commenterName = commenterProfile?.display_name ?? commenterProfile?.username ?? "Someone";
+
+    await createNotification({
+      userId: project.owner_id,
+      type: "new_comment",
+      title: "New comment on your project",
+      body: `${commenterName} commented on "${project.title}".`,
+      projectId,
+    });
   }
 
   return actionSuccess(undefined, "Comment posted.");

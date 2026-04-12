@@ -228,8 +228,14 @@ export default function ExploreProjects({
           isLoggedIn={isLoggedIn}
         />
       ) : (
-        <div className="rounded-2xl border bg-card p-10 text-center shadow-sm">
-          <p className="text-muted-foreground">No projects found.</p>
+        <div className="rounded-2xl border bg-card px-6 py-16 text-center shadow-sm">
+          <p className="text-4xl">🔍</p>
+          <h3 className="mt-4 text-lg font-semibold">No projects found</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {currentSearch
+              ? `No results for "${currentSearch}". Try a different search term or category.`
+              : "There are no projects in this category yet. Be the first to start one!"}
+          </p>
         </div>
       )}
     </div>

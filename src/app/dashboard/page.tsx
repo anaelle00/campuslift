@@ -128,14 +128,15 @@ export default async function DashboardPage() {
             showStatusControl={true}
           />
         ) : (
-          <div className="rounded-2xl border bg-card p-8 text-center shadow-sm">
-            <h3 className="text-lg font-semibold">No projects yet</h3>
-            <p className="mt-2 text-muted-foreground">
-              You have not created any projects yet.
+          <div className="rounded-2xl border bg-card px-6 py-14 text-center shadow-sm">
+            <p className="text-4xl">🚀</p>
+            <h3 className="mt-4 text-lg font-semibold">No projects yet</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Share your idea with the campus community and start raising support.
             </p>
             <Link
               href="/create"
-              className="mt-4 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              className="mt-5 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
             >
               Start your first project
             </Link>
@@ -162,15 +163,15 @@ export default async function DashboardPage() {
             isLoggedIn={true}
           />
         ) : (
-          <div className="rounded-2xl border bg-card p-8 text-center shadow-sm">
-            <h3 className="text-lg font-semibold">No saved projects yet</h3>
-            <p className="mt-2 text-muted-foreground">
-              Explore projects and click the heart icon to save the ones you
-              like.
+          <div className="rounded-2xl border bg-card px-6 py-14 text-center shadow-sm">
+            <p className="text-4xl">🤍</p>
+            <h3 className="mt-4 text-lg font-semibold">No saved projects yet</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Explore projects and click the heart icon to save the ones you like.
             </p>
             <Link
               href="/explore"
-              className="mt-4 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              className="mt-5 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
             >
               Explore projects
             </Link>

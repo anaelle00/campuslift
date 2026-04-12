@@ -10,12 +10,12 @@ test.describe("Project creation", () => {
   test("create page is accessible when logged in", async ({ page }) => {
     await loginAs(page, EMAIL, PASSWORD);
     await page.goto("/create");
-    await expect(page.getByRole("heading", { name: /start a new project/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /start a project/i })).toBeVisible();
   });
 
-  test("/create redirects to login when not authenticated", async ({ page }) => {
+  test("/create shows the form when not authenticated (auth enforced on submit)", async ({ page }) => {
     await page.goto("/create");
-    await expect(page).toHaveURL(/\/login/);
+    await expect(page.getByLabel(/project title/i)).toBeVisible();
   });
 
   test("create form has all required fields", async ({ page }) => {

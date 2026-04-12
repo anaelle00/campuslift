@@ -41,7 +41,7 @@ test.describe("Auth flow", () => {
     await page.goto("/dashboard");
     await expect(page.getByRole("heading", { name: /welcome back/i })).toBeVisible();
     await expect(page.getByRole("heading", { name: /my projects/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /saved projects/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /^saved projects$/i, level: 2 })).toBeVisible();
   });
 
   test("logs out and returns to home", async ({ page }) => {

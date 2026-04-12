@@ -46,8 +46,10 @@ test.describe("Project detail", () => {
   test("favorite button redirects unauthenticated user to login", async ({ page }) => {
     await page.goto("/explore");
     const firstCard = page.locator("a[href^='/projects/']").first();
+    await expect(firstCard).toBeVisible({ timeout: 8_000 });
     await firstCard.click();
-    await page.getByRole("button", { name: /add to favorites/i }).click();
+    await expect(page).toHaveURL(/\/projects\//);
+    await page.getByRole("button", { name: /add to favorites/i }).first().click();
     await expect(page).toHaveURL(/\/login/);
   });
 

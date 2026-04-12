@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { recordStripeCheckoutSession } from "@/features/donations/actions";
+import { createNotification } from "@/features/notifications/actions";
 import { getStripeServer, getStripeWebhookSecret } from "@/lib/stripe/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendSupportNotification } from "@/lib/resend";
@@ -82,6 +83,18 @@ export async function POST(request: Request) {
             .single();
 
           if (project?.owner_id) {
+            const amountFormatted = (amountTotal / 100).toFixed(2);
+
+            // In-app notification
+            await createNotification({
+              userId: project.owner_id,
+              type: "new_supporter",
+              title: "New supporter!",
+              body: `Someone just pledged $${amountFormatted} to your project "${project.title}".`,
+              projectId,
+            });
+
+            // Email notification
             const { data: ownerAuth } = await supabase.auth.admin.getUserById(
               project.owner_id,
             );

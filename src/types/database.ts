@@ -99,6 +99,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: "new_supporter" | "new_comment";
+          title: string;
+          body: string;
+          project_id: string | null;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: "new_supporter" | "new_comment";
+          title: string;
+          body: string;
+          project_id?: string | null;
+          read?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          type?: "new_supporter" | "new_comment";
+          title?: string;
+          body?: string;
+          project_id?: string | null;
+          read?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       favorites: {
         Row: {
           created_at: string | null;

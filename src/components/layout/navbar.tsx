@@ -3,7 +3,10 @@ import Link from "next/link";
 import { HandHeart } from "lucide-react";
 import LogoutButton from "@/components/auth/logout-button";
 import ThemeToggle from "@/components/layout/theme-toggle";
+import MobileMenu from "@/components/layout/mobile-menu";
+import NotificationBell from "@/components/notifications/notification-bell";
 import { getNavbarData } from "@/features/auth/queries";
+import { getNotifications } from "@/features/notifications/queries";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -12,6 +15,7 @@ const navLinks = [
 
 export default async function Navbar() {
   const { user, avatarUrl, isAdmin } = await getNavbarData();
+  const { notifications, unreadCount } = user ? await getNotifications() : { notifications: [], unreadCount: 0 };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -28,7 +32,8 @@ export default async function Navbar() {
         </Link>
 
         <div className="flex items-center gap-3">
-          <nav className="flex items-center gap-1">
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -61,7 +66,12 @@ export default async function Navbar() {
           <ThemeToggle />
 
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-3 md:flex">
+              <NotificationBell
+                initialNotifications={notifications}
+                initialUnreadCount={unreadCount}
+                userId={user.id}
+              />
               <Link href="/profile">
                 <Image
                   src={avatarUrl || "/avatar-placeholder.png"}
@@ -76,11 +86,14 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
+              className="hidden rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90 md:inline-flex"
             >
               Log in
             </Link>
           )}
+
+          {/* Mobile hamburger */}
+          <MobileMenu links={navLinks} isLoggedIn={!!user} isAdmin={isAdmin} />
         </div>
       </div>
     </header>
