@@ -11,29 +11,37 @@ The repository is used both as:
 
 CampusLift currently includes:
 
-- Supabase authentication
-- public project listing and project detail pages
-- project creation with image upload
+- Supabase authentication (sign up, login, logout)
+- public project listing with search, category filters, and pagination
+- project detail pages with live funding counter (Supabase Realtime)
+- project creation with image upload and draft/published/archived status
+- project deletion with confirmation
 - favorites / saved projects
-- user profiles
-- a creator dashboard
+- user profiles with donation history
+- a creator dashboard with project status management
 - Stripe Checkout with webhook-based support recording
-- donation history in the dashboard and profile
+- in-app notification system with real-time bell (Supabase Realtime)
+- email notifications via Resend when a project receives a new supporter
 - threaded comments with replies
 - comment likes / dislikes
 - comment reports
 - an admin moderation dashboard
+- dark mode via next-themes
+- mobile-responsive navbar with hamburger menu
+- footer with navigation links
+- custom 404 page
 
 ## Tech Stack
 
-- Next.js 16
+- Next.js 16 (App Router)
 - React 19
-- TypeScript
-- Tailwind CSS
-- Supabase Auth
-- Supabase Postgres
-- Supabase Storage
-- Stripe Checkout
+- TypeScript (strict mode)
+- Tailwind CSS 4 + shadcn/ui
+- Supabase Auth + Postgres + Storage + Realtime
+- Stripe Checkout + webhooks
+- Resend (email notifications)
+- Vitest (unit and component tests)
+- Playwright (E2E tests)
 
 ## Repository Structure
 
@@ -46,6 +54,7 @@ src/
   types/        shared TypeScript types
 docs/           architecture, roadmap, database, testing
 supabase/       SQL migrations
+e2e/            Playwright end-to-end tests
 ```
 
 See [architecture.md](docs/architecture.md) for the architecture direction.
@@ -85,6 +94,7 @@ Optional:
 
 - `STRIPE_CURRENCY` defaults to `cad`
 - `NEXT_PUBLIC_APP_URL` can override the URL used in Stripe redirects
+- `RESEND_API_KEY` enables email notifications
 
 ## Local Setup
 
@@ -94,7 +104,7 @@ Optional:
 npm install
 ```
 
-2. Apply the SQL migrations in `supabase/migrations/`.
+2. Apply the SQL migrations in `supabase/migrations/` via the Supabase SQL Editor or CLI.
 
 3. Create at least one account in the app, then optionally run `supabase/seed.sql`
    to sync `profiles` from `auth.users` and create one demo project locally.
@@ -121,8 +131,7 @@ where username = 'your_username';
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
-Then copy the webhook signing secret printed by Stripe into
-`STRIPE_WEBHOOK_SECRET`.
+Then copy the webhook signing secret printed by Stripe into `STRIPE_WEBHOOK_SECRET`.
 
 ## Available Scripts
 
@@ -130,31 +139,37 @@ Then copy the webhook signing secret printed by Stripe into
 - `npm run build` creates a production build
 - `npm run start` starts the production server
 - `npm run lint` runs ESLint
-- `npm run test` runs Vitest unit tests
+- `npm run test` runs Vitest unit and component tests
 - `npm run test:watch` runs Vitest in watch mode
-- `npm run typegen` generates Next.js route types
+- `npm run test:e2e` runs Playwright end-to-end tests
 - `npm run typecheck` generates Next.js types and runs TypeScript checks
 - `npm run check` runs lint, typecheck, and unit tests together
+
+### Running E2E tests
+
+Create a `.env.test.local` file at the root with credentials for a test account:
+
+```
+E2E_USER_EMAIL=your-test-account@example.com
+E2E_USER_PASSWORD=your-password
+```
+
+Then run:
+
+```bash
+npm run test:e2e
+```
+
+Playwright will start the dev server automatically.
 
 ## Key Documentation
 
 - [architecture.md](docs/architecture.md)
 - [database.md](docs/database.md)
 - [deployment.md](docs/deployment.md)
-- [release-checklist.md](docs/release-checklist.md)
 - [testing.md](docs/testing.md)
 - [product-roadmap.md](docs/product-roadmap.md)
-- [enterprise-project-report.md](docs/enterprise-project-report.md)
-- [supabase/README.md](supabase/README.md)
-
-## Current Priorities
-
-1. deploy a staging version and validate external integrations
-2. UI refinement and stronger visual identity
-3. server-side filtering, pagination, and route hardening
-4. project states and richer creator workflows
-5. notifications, search, and S3 uploads
 
 ## Status
 
-CampusLift is an active in-progress product. The core flows work, the repository is now feature-oriented, and the next phase is cleanup, UI improvement, and stronger repo polish before another large feature wave.
+CampusLift is an active in-progress product. Core flows are fully functional: authentication, project lifecycle (draft → published → archived), Stripe payments, real-time notifications, threaded comments, and admin moderation. The codebase follows server-first Next.js patterns with RLS-secured Supabase queries throughout.
